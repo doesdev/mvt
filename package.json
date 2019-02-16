@@ -1,0 +1,31 @@
+{
+  "name": "mvt",
+  "version": "1.0.0",
+  "description": "A minimum viable testing framework, aka a few test helpers, 0 dependencies",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "test": "node test --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doesdev/mvt.git"
+  },
+  "keywords": [
+    "test",
+    "testing",
+    "lite",
+    "no dependencies",
+    "helpers"
+  ],
+  "author": "Andrew Carpenter (https://github.com/doesdev)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/doesdev/mvt/issues"
+  },
+  "homepage": "https://github.com/doesdev/mvt#readme",
+  "dependencies": {},
+  "devDependencies": {}
+}
