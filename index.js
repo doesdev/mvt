@@ -1,5 +1,6 @@
 'use strict'
 
+const readline = require('readline')
 const colorReset = `\u001b[0m`
 const colorGreen = `\u001b[32m`
 const verbose = process.argv.some((a) => a === '--verbose')
@@ -7,9 +8,10 @@ const verbose = process.argv.some((a) => a === '--verbose')
 const start = (msg) => process.stdout.write(`${msg}\n`)
 
 const finish = () => {
-  process.stdout.clearLine()
-  process.stdout.cursorTo(0)
-  process.stdout.write(`${colorGreen}All ${run} tests passed${colorReset}\n`)
+  const plural = run > 1 ? 'tests' : 'test'
+  readline.clearLine(process.stdout, 0)
+  readline.cursorTo(process.stdout, 0)
+  process.stdout.write(`${colorGreen}All ${run} ${plural} passed${colorReset}\n`)
 }
 
 let run = 0
@@ -40,9 +42,10 @@ const test = (msg, isTruthyOrCompA, compB) => {
   if (verbose) {
     process.stdout.write(`${colorGreen}Passed:${colorReset} ${msg}\n`)
   } else {
-    process.stdout.clearLine()
-    process.stdout.cursorTo(0)
-    process.stdout.write(`${colorGreen}${run} test have passed${colorReset}`)
+    const plural = run > 1 ? 'tests have' : 'test'
+    readline.clearLine(process.stdout, 0)
+    readline.cursorTo(process.stdout, 0)
+    process.stdout.write(`${colorGreen}${run} ${plural} passed${colorReset}`)
   }
   return true
 }
