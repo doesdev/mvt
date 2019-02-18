@@ -107,7 +107,7 @@ const runTests = async () => {
     return fail(`Got unexpected stdout content: ${result.stdout}`, result)
   }
 
-  msg = 'test with inequal comparison passes'
+  msg = 'test with inequal comparison fails'
   body = `test('${msg}', 'jerry', 'jimmy')`
   result = await writeRunDeleteTest(body)
 
