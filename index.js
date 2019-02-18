@@ -15,29 +15,51 @@ const finish = () => {
 }
 
 let run = 0
-const fail = (err) => {
+const fail = (err, meta) => {
   process.stdout.write(`${colorReset}\n`)
   console.error(err instanceof Error ? err : new Error(`Fail: ${err}`))
+
+  if (meta) {
+    console.error('\n')
+
+    if (meta instanceof Error) {
+      console.error(meta)
+    } else {
+      Object.entries(meta).forEach(([k, v]) => {
+        console.error(`${k}:`)
+        console.error(`${`${v}`.trimEnd()}\n`)
+      })
+    }
+  }
+
   return process.exit(1)
 }
 
-const runTests = async (cb) => {
+const runTests = async (cb, meta) => {
   try {
     await cb()
   } catch (ex) {
-    return fail(ex)
+    return fail(ex, meta)
   }
 }
 
-const test = (msg, isTruthyOrCompA, compB) => {
+const test = (msg, isTruthyOrCompA, compB, meta) => {
   run++
+
+  if (typeof isTruthyOrCompA === 'function') {
+    try {
+      isTruthyOrCompA = isTruthyOrCompA()
+    } catch (ex) {
+      return fail(msg, ex)
+    }
+  }
 
   if (compB !== undefined && isTruthyOrCompA !== compB) {
     msg += `\n${isTruthyOrCompA} !== ${compB}`
     isTruthyOrCompA = false
   }
 
-  if (!isTruthyOrCompA) return fail(msg)
+  if (!isTruthyOrCompA) return fail(msg, meta)
 
   if (verbose) {
     process.stdout.write(`${colorGreen}Passed:${colorReset} ${msg}\n`)
@@ -50,11 +72,12 @@ const test = (msg, isTruthyOrCompA, compB) => {
   return true
 }
 
-const testAsync = async (msg, promise) => {
+const testAsync = async (msg, promise, meta) => {
   try {
-    test(msg, await promise())
+    test(msg, await promise(), undefined, meta)
+    return true
   } catch (ex) {
-    return fail(ex)
+    return fail(msg, ex)
   }
 }
 

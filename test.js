@@ -8,8 +8,22 @@ const base = `
 const { runTests, start, finish, test, testAsync } = require('./index')
 `
 
-const fail = (err) => {
+const fail = (err, meta) => {
   console.error(err instanceof Error ? err : new Error(`Fail: ${err}`))
+
+  if (meta) {
+    console.error('\n')
+
+    if (meta instanceof Error) {
+      console.error(meta)
+    } else {
+      Object.entries(meta).forEach(([k, v]) => {
+        console.error(`${k}:`)
+        console.error(`${`${v}`.trimEnd()}\n`)
+      })
+    }
+  }
+
   return process.exit(1)
 }
 
@@ -47,77 +61,87 @@ const writeRunDeleteTest = async (body, verbose) => {
 }
 
 const runTests = async () => {
-  let result, body
+  let result, body, msg, innerMsg
 
-  body = `test('message', true)`
+  msg = 'test with truthy value passes'
+  body = `test('${msg}', true)`
   result = await writeRunDeleteTest(body)
 
   if (+result.code !== 0) {
-    return fail(`Got unexpected status code: ${result.code}`)
+    return fail(`Got unexpected status code: ${result.code}`, result)
   }
 
   if (result.stderr) {
-    return fail(`Got unexpected stderr content: ${result.stderr}`)
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
   }
 
   if (result.stdout.indexOf('1 test passed') === -1) {
-    return fail(`Got unexpected stdout content: ${result.stdout}`)
+    return fail(`Got unexpected stdout content: ${result.stdout}`, result)
   }
 
-  body = `test('message', false)`
+  msg = 'test with falsy value fails'
+  body = `test('${msg}', false)`
   result = await writeRunDeleteTest(body)
 
   if (+result.code !== 1) {
-    return fail(`Got unexpected status code: ${result.code}`)
+    return fail(`Got unexpected status code: ${result.code}`, result)
   }
 
-  if (result.stderr.indexOf('Fail: message') === -1) {
-    return fail(`Got unexpected stderr content: ${result.stderr}`)
+  if (result.stderr.indexOf(`Fail: ${msg}`) === -1) {
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
   }
 
-  body = `test('message', 'jerry', 'jerry')`
+  msg = 'test with equal comparison passes'
+  body = `test('${msg}', 'jerry', 'jerry')`
   result = await writeRunDeleteTest(body)
 
   if (+result.code !== 0) {
-    return fail(`Got unexpected status code: ${result.code}`)
+    return fail(`Got unexpected status code: ${result.code}`, result)
   }
 
   if (result.stderr) {
-    return fail(`Got unexpected stderr content: ${result.stderr}`)
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
   }
 
   if (result.stdout.indexOf('1 test passed') === -1) {
-    return fail(`Got unexpected stdout content: ${result.stdout}`)
+    return fail(`Got unexpected stdout content: ${result.stdout}`, result)
   }
 
-  body = `test('message', 'jerry', 'jimmy')`
+  msg = 'test with inequal comparison passes'
+  body = `test('${msg}', 'jerry', 'jimmy')`
   result = await writeRunDeleteTest(body)
 
   if (+result.code !== 1) {
-    return fail(`Got unexpected status code: ${result.code}`)
+    return fail(`Got unexpected status code: ${result.code}`, result)
+  }
+
+  if (result.stderr.indexOf(msg) === -1) {
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
   }
 
   if (result.stderr.indexOf('jerry !== jimmy') === -1) {
-    return fail(`Got unexpected stderr content: ${result.stderr}`)
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
   }
 
+  msg = 'runTests catches errors thrown inside it'
   body = `runTests(() => {
-    throw new Error('This error came from non-test code')
+    throw new Error('${msg}')
     test('message', 'jerry', 'jimmy')
   })
   `
   result = await writeRunDeleteTest(body)
 
   if (+result.code !== 1) {
-    return fail(`Got unexpected status code: ${result.code}`)
+    return fail(`Got unexpected status code: ${result.code}`, result)
   }
 
-  if (result.stderr.indexOf('This error came from non-test code') === -1) {
-    return fail(`Got unexpected stderr content: ${result.stderr}`)
+  if (result.stderr.indexOf(msg) === -1) {
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
   }
 
+  msg = 'start and finish produce expected stdout content'
   body = `runTests(() => {
-    start('testing app')
+    start('${msg}')
     test('message', true)
     test('message', 'jerry', 'jerry')
     finish()
@@ -126,27 +150,28 @@ const runTests = async () => {
   result = await writeRunDeleteTest(body)
 
   if (+result.code !== 0) {
-    return fail(`Got unexpected status code: ${result.code}`)
+    return fail(`Got unexpected status code: ${result.code}`, result)
   }
 
   if (result.stderr) {
-    return fail(`Got unexpected stderr content: ${result.stderr}`)
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
   }
 
-  if (result.stdout.indexOf('testing app') === -1) {
-    return fail(`Got unexpected stdout content: ${result.stdout}`)
+  if (result.stdout.indexOf(msg) === -1) {
+    return fail(`Got unexpected stdout content: ${result.stdout}`, result)
   }
 
   if (result.stdout.indexOf('2 tests have passed') === -1) {
-    return fail(`Got unexpected stdout content: ${result.stdout}`)
+    return fail(`Got unexpected stdout content: ${result.stdout}`, result)
   }
 
   if (result.stdout.indexOf('All 2 tests passed') === -1) {
-    return fail(`Got unexpected stdout content: ${result.stdout}`)
+    return fail(`Got unexpected stdout content: ${result.stdout}`, result)
   }
 
+  msg = 'verbose mode prints passed message for each test'
   body = `runTests(() => {
-    start('testing app')
+    start('${msg}')
     test('message A', true)
     test('message B', 'jerry', 'jerry')
     finish()
@@ -155,27 +180,113 @@ const runTests = async () => {
   result = await writeRunDeleteTest(body, true)
 
   if (+result.code !== 0) {
-    return fail(`Got unexpected status code: ${result.code}`)
+    return fail(`Got unexpected status code: ${result.code}`, result)
   }
 
   if (result.stderr) {
-    return fail(`Got unexpected stderr content: ${result.stderr}`)
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
   }
 
-  if (result.stdout.indexOf('testing app') === -1) {
-    return fail(`Got unexpected stdout content: ${result.stdout}`)
+  if (result.stdout.indexOf(msg) === -1) {
+    return fail(`Got unexpected stdout content: ${result.stdout}`, result)
   }
 
   if (!result.stdout.match(/Passed:.+?message A/)) {
-    return fail(`Got unexpected stdout content: ${result.stdout}`)
+    return fail(`Got unexpected stdout content: ${result.stdout}`, result)
   }
 
   if (!result.stdout.match(/Passed:.+?message B/)) {
-    return fail(`Got unexpected stdout content: ${result.stdout}`)
+    return fail(`Got unexpected stdout content: ${result.stdout}`, result)
   }
 
   if (result.stdout.indexOf('All 2 tests passed') === -1) {
-    return fail(`Got unexpected stdout content: ${result.stdout}`)
+    return fail(`Got unexpected stdout content: ${result.stdout}`, result)
+  }
+
+  msg = 'testAsync should handle truthy resolving promise as expected'
+  innerMsg = 'promise should resolve truthy'
+  body = `runTests(async () => {
+    start('${msg}')
+    await testAsync('${innerMsg}', () => Promise.resolve(true))
+    finish()
+  })
+  `
+  result = await writeRunDeleteTest(body, true)
+
+  if (+result.code !== 0) {
+    return fail(`Got unexpected status code: ${result.code}`, result)
+  }
+
+  if (result.stderr) {
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
+  }
+
+  if (result.stdout.indexOf(msg) === -1) {
+    return fail(`Got unexpected stdout content: ${result.stdout}`, result)
+  }
+
+  if (result.stdout.indexOf(innerMsg) === -1) {
+    return fail(`Got unexpected stdout content: ${result.stdout}`, result)
+  }
+
+  msg = 'testAsync should fail on rejected promise'
+  innerMsg = 'promise should reject'
+  body = `runTests(async () => {
+    start('${msg}')
+    await testAsync('${innerMsg}', () => Promise.reject())
+    finish()
+  })
+  `
+  result = await writeRunDeleteTest(body, true)
+
+  if (+result.code !== 1) {
+    return fail(`Got unexpected status code: ${result.code}`, result)
+  }
+
+  if (result.stdout.indexOf(msg) === -1) {
+    return fail(`Got unexpected stderr content: ${result.stdout}`, result)
+  }
+
+  if (result.stderr.indexOf(innerMsg) === -1) {
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
+  }
+
+  msg = 'testAsync should fail on promise that resolves falsy'
+  innerMsg = 'promise should resolve falsy'
+  body = `runTests(async () => {
+    start('${msg}')
+    await testAsync('${innerMsg}', () => Promise.resolve(false))
+    finish()
+  })
+  `
+  result = await writeRunDeleteTest(body, true)
+
+  if (+result.code !== 1) {
+    return fail(`Got unexpected status code: ${result.code}`, result)
+  }
+
+  if (result.stdout.indexOf(msg) === -1) {
+    return fail(`Got unexpected stderr content: ${result.stdout}`, result)
+  }
+
+  if (result.stderr.indexOf(innerMsg) === -1) {
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
+  }
+
+  msg = 'failing test with meta data should print it to stderr'
+  body = `test('${msg}', false, undefined, { a: 'b' })`
+  result = await writeRunDeleteTest(body)
+
+  if (+result.code !== 1) {
+    return fail(`Got unexpected status code: ${result.code}`, result)
+  }
+
+  if (result.stderr.indexOf(`Fail: ${msg}`) === -1) {
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
+  }
+
+  if (result.stderr.indexOf(`a:\nb`) === -1) {
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
   }
 
   console.log('All tests passed for MVT')
