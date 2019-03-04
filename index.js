@@ -5,13 +5,19 @@ const colorReset = `\u001b[0m`
 const colorGreen = `\u001b[32m`
 const verbose = process.argv.some((a) => a === '--verbose')
 
-const start = (msg) => process.stdout.write(`${msg}\n`)
+let startime
+const start = (msg) => {
+  if (msg) process.stdout.write(`${msg}\n`)
+  startime = Date.now()
+}
 
 const finish = () => {
+  const sec = `${((Date.now() - startime) / 1000).toFixed(2)} seconds`
   const plural = run > 1 ? 'tests' : 'test'
   readline.clearLine(process.stdout, 0)
   readline.cursorTo(process.stdout, 0)
-  process.stdout.write(`${colorGreen}All ${run} ${plural} passed${colorReset}\n`)
+  const out = `${colorGreen}All ${run} ${plural} passed${colorReset} in ${sec}\n`
+  process.stdout.write(out)
 }
 
 let run = 0
@@ -35,12 +41,19 @@ const fail = (err, meta) => {
   return process.exit(1)
 }
 
-const runTests = async (cb, meta) => {
+const runTests = async (msg, cb, meta) => {
+  if (typeof msg === 'function') {
+    meta = cb
+    cb = msg
+    msg = undefined
+  }
+  start(msg)
   try {
     await cb()
   } catch (ex) {
     return fail(ex, meta)
   }
+  finish()
 }
 
 const test = (msg, isTruthyOrCompA, compB, meta) => {

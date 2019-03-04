@@ -3,7 +3,7 @@
 > A minimum viable testing framework, aka a few test helpers, 0 dependencies
 
 ## why another testing module
-I'm getting tired of github security alerts on nested dev dependencies, usually
+I'm getting tired of Github security alerts on nested dev dependencies, typically
 from my chosen test framework. The tests I run are typically lite and
 don't require all the frills provided by the majors. I'm totes fine with
 nothing more than testing for a truthy value or comparing two values. As with
@@ -29,16 +29,11 @@ $ npm install --save-dev mvt
 
 ## api
 
-**runTests** (testCallback[, meta]) - Just a wrapper that takes care to catch anything in it
-  - arguments
-    - `function / async function` - Run your tests in this to ensure nothing is missed
-    - `object` - If anything fails this object will be printed to stderr
-
-**start** (message) - Prints specified message on test start-up
+**runTests** (message, testCallback[, meta]) - Just a wrapper that takes care to catch anything in it
   - arguments
     - `string` - Message to display on test start-up
-
-**finish** () - Prints "All X tests passed" in green, how fancy
+    - `function / async function` - Run your tests in this to ensure nothing is missed
+    - `object` - If anything fails this object will be printed to stderr
 
 **test** (description, truthyOrComparison[[, comparison], meta]) - Test against single truthy value or compare two values
   - arguments
@@ -60,16 +55,12 @@ $ npm install --save-dev mvt
 ```js
 const { runTests, start, finish, test, testAsync } = require('mvt')
 
-runTests(async () => {
-  start(`Testing my app`)
-
+runTests(`Testing my app`, async () => {
   test('Should be truthy', true)
 
   test('Should be equal', 1, 1)
 
   await testAsync('Should resolve truthy', async () => Promise.resolve(true))
-
-  finish()
 })
 ```
 

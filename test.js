@@ -231,10 +231,8 @@ const runTests = async () => {
 
   msg = 'testAsync should fail on rejected promise'
   innerMsg = 'promise should reject'
-  body = `runTests(async () => {
-    start('${msg}')
+  body = `runTests('${msg}', async () => {
     await testAsync('${innerMsg}', () => Promise.reject())
-    finish()
   })
   `
   result = await writeRunDeleteTest(body, true)
