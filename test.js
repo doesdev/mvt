@@ -123,6 +123,22 @@ const runTests = async () => {
     return fail(`Got unexpected stderr content: ${result.stderr}`, result)
   }
 
+  msg = 'test with equal comparison that is falsy passes'
+  body = `test('${msg}', false, false)`
+  result = await writeRunDeleteTest(body)
+
+  if (+result.code !== 0) {
+    return fail(`Got unexpected status code: ${result.code}`, result)
+  }
+
+  if (result.stderr) {
+    return fail(`Got unexpected stderr content: ${result.stderr}`, result)
+  }
+
+  if (result.stdout.indexOf('1 test passed') === -1) {
+    return fail(`Got unexpected stdout content: ${result.stdout}`, result)
+  }
+
   msg = 'runTests catches errors thrown inside it'
   body = `runTests(() => {
     throw new Error('${msg}')

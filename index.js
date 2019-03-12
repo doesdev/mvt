@@ -67,9 +67,9 @@ const test = (msg, isTruthyOrCompA, compB, meta) => {
     }
   }
 
-  if (compB !== undefined && isTruthyOrCompA !== compB) {
-    msg += `\n${isTruthyOrCompA} !== ${compB}`
-    isTruthyOrCompA = false
+  if (compB !== undefined) {
+    if (isTruthyOrCompA !== compB) msg += `\n${isTruthyOrCompA} !== ${compB}`
+    isTruthyOrCompA = isTruthyOrCompA === compB
   }
 
   if (!isTruthyOrCompA) return fail(msg, meta)
