@@ -18,6 +18,7 @@ const finish = () => {
   readline.cursorTo(process.stdout, 0)
   const out = `${colorGreen}All ${run} ${plural} passed${colorReset} in ${sec}\n`
   process.stdout.write(out)
+  process.exit(0)
 }
 
 let run = 0
