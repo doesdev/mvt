@@ -4,21 +4,18 @@
 
 ## why another testing module
 I'm getting tired of Github security alerts on nested dev dependencies, typically
-from my chosen test framework. The tests I run are typically lite and
-don't require all the frills provided by the majors. I'm totes fine with
-nothing more than testing for a truthy value or comparing two values. As with
-most of my open source this is for me. There are many actually good test
-frameworks out there, but this is all I need for many circumstances.
+from my chosen test framework. There are many actually good test frameworks out 
+there, but this is all I need for many circumstances.
 
 ## what's good about it
-- It's lightweight @ < 100 sloc
 - It has 0 dependencies (same for devDependencies)
+- It's lightweight @ < 100 sloc
 
 ## this might be for you if
 - Your tests don't require heavy tooling
 - Concurrency doesn't make or break your testing times
-- You know how to coerce tests to fitting truthy or a/b equality checks
-- You're happy to do said coercion in your test file
+- Your tests allow for coercion to fitting truthy or a/b equality checks
+- You're okay limiting test to said coercion
 - You don't need much control over test output formatting
 
 ## install
@@ -53,7 +50,7 @@ $ npm install --save-dev mvt
 ## usage
 
 ```js
-const { runTests, start, finish, test, testAsync } = require('mvt')
+const { runTests, test, testAsync } = require('mvt')
 
 runTests(`Testing my app`, async () => {
   test('Should be truthy', true)
