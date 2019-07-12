@@ -4,7 +4,8 @@
   "description": "A minimum viable testing framework, aka a few test helpers, 0 dependencies",
   "main": "index.js",
   "files": [
-    "index.js"
+    "index.js",
+    "cli-char-supported.js"
   ],
   "scripts": {
     "test": "node test --verbose"
