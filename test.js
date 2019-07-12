@@ -207,11 +207,11 @@ const runTests = async () => {
     return fail(`Got unexpected stdout content: ${result.stdout}`, result)
   }
 
-  if (!result.stdout.match(/Passed:.+?message A/)) {
+  if (!result.stdout.match(/\u2705.+?message A/)) {
     return fail(`Got unexpected stdout content: ${result.stdout}`, result)
   }
 
-  if (!result.stdout.match(/Passed:.+?message B/)) {
+  if (!result.stdout.match(/\u2705.+?message B/)) {
     return fail(`Got unexpected stdout content: ${result.stdout}`, result)
   }
 

@@ -3,7 +3,35 @@
 const readline = require('readline')
 const colorReset = `\u001b[0m`
 const colorGreen = `\u001b[32m`
+const check = `\u2705`
+const nope = '\u274C'
 const verbose = process.argv.some((a) => a === '--verbose')
+
+/*
+.pass([message])
+Passing assertion.
+
+.fail([message])
+Failing assertion.
+
+.assert(value, [message])
+Asserts that value is truthy. This is power-assert enabled.
+
+.truthy(value, [message])
+Assert that value is truthy.
+
+.falsy(value, [message])
+Assert that value is falsy.
+
+.is(value, expected, [message])
+Assert that value is the same as expected. This is based on Object.is().
+
+.not(value, expected, [message])
+Assert that value is not the same as expected. This is based on Object.is().
+
+.deepEqual(value, expected, [message])
+Assert that value is deeply equal to expected.
+*/
 
 let startime
 const start = (msg) => {
@@ -52,7 +80,7 @@ const runTests = async (msg, cb, meta) => {
   try {
     await cb()
   } catch (ex) {
-    return fail(ex, meta)
+    return fail(msg, ex, meta)
   }
   finish()
 }
@@ -76,7 +104,7 @@ const test = (msg, isTruthyOrCompA, compB, meta) => {
   if (!isTruthyOrCompA) return fail(msg, meta)
 
   if (verbose) {
-    process.stdout.write(`${colorGreen}Passed:${colorReset} ${msg}\n`)
+    process.stdout.write(`${check} ${msg}\n`)
   } else {
     const plural = run > 1 ? 'tests have' : 'test'
     readline.clearLine(process.stdout, 0)
