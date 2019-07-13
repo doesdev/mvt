@@ -2,6 +2,9 @@
 
 const test = require('./index')
 
+test.after(() => console.log('test.after invoked'))
+test.before(() => console.log('test.before invoked'))
+
 test('assert.is works', async (assert) => {
   assert.is(1, 1)
   assert.is(true, true)
@@ -44,4 +47,10 @@ test('assert.deepEqual works', async (assert) => {
     { a: [1, 2], b: { a: { c: 2 } } },
     { a: [1, 2], b: { a: { c: 2 } } }
   )
+})
+
+test.todo('test.todo works')
+
+test.failing('test.failing works', (assert) => {
+  assert.is(1, 2)
 })
