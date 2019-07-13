@@ -70,9 +70,27 @@ const test = async (msg, fn) => {
   process.nextTick(async () => {
     if (curLen !== queue.length) return
 
+    let first = []
     let last = []
-    for (let t of queue) t.last ? last.push(t) : await runner(t)
-    for (let t of last) await runner(t)
+    let only = []
+    let normal = []
+
+    for (let t of queue) {
+      if (t.first) first.push(t)
+      else if (t.last) last.push(t)
+      else if (t.only) only.push(t)
+      else normal.push(t)
+    }
+
+    for (let t of first) await runner(t)
+
+    if (only.length) {
+      for (let t of only) await runner(t)
+    } else {
+      for (let t of normal) await runner(t)
+    }
+
+    for (let t of first) await runner(t)
   })
 }
 
@@ -87,8 +105,6 @@ const after = (fn) => {
   test()
   return test
 }
-
-const serial = () => {}
 
 const skip = (msg) => {
   const fn = () => {
@@ -110,7 +126,11 @@ const todo = (msg) => {
   return test
 }
 
-const only = () => {}
+const only = (msg, fn) => {
+  queue.push({ msg, fn, only: true })
+  test()
+  return test
+}
 
 const failing = (msg, fn) => {
   queue.push({ msg, fn, failing: true })
@@ -182,7 +202,6 @@ Object.assign(test, {
   setup,
   before,
   after,
-  serial,
   skip,
   todo,
   only,
