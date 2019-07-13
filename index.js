@@ -46,8 +46,6 @@ const only = () => {}
 
 const failing = () => {}
 
-Object.assign(test, { setup, before, after, serial, skip, only, failing })
-
 const assert = (msg) => ({
   is: is(msg),
   not: not(msg),
@@ -71,5 +69,16 @@ const truthy = (msg) => () => {}
 const falsy = (msg) => () => {}
 
 const deepEqual = (msg) => () => {}
+
+Object.assign(test, {
+  assert,
+  setup,
+  before,
+  after,
+  serial,
+  skip,
+  only,
+  failing
+})
 
 module.exports = test

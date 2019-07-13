@@ -11,6 +11,7 @@ const test = require('./index')
 
 let i = 0
 
+// TODO: Consider using [vm + workers] instead of [file + child-process]
 module.exports = async (body, verbose) => {
   const file = path.join(tempPath, `${Date.now()}-${++i}.js`)
   fs.writeFileSync(file, `${base}\n${body}`, 'utf8')
