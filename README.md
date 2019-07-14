@@ -2,25 +2,25 @@
 
 > Minimum Viable Testing framework, it's like AVA, if AVA sucked
 
-## you should probably use AVA
+## You should probably use AVA
 Because [AVA](https://github.com/avajs/ava) is awesome.
 
-## what is this
+## What is this
 It started as a few test helpers. I made it for small projects with minimal
 test needs. That was a bit too restrictive though. In version `4.0.0+` it became
 a blatant ripoff of AVA. Well, not really. It does about 1% of what AVA does,
 and it doesn't do that nearly as well.
 
-## if it's inferior in every way to AVA then why does it exist
+## If it's inferior in every way to AVA then why does it exist
 Because I need to minimize my security alerts so that I don't lose real security
 threats in the deluge. I'm often finding my devDependencies to be the culprit
 of most alerts. This is an effort to minimize recursive devDependencies.
 
-## what's good about it
+## What's good about it
 - It has 0 dependencies and devDependencies
 - That's really about it
 
-## what it lacks (way more than I can list, but here's the most notable)
+## What it lacks (way more than I can list, but here's the most notable)
 - A CLI (for now)
   - tests must be run as `node tests/a.js`
   - the above must be done for each test file `node tests/a.js && node tests/b.js`
@@ -32,18 +32,20 @@ of most alerts. This is an effort to minimize recursive devDependencies.
   - that's not a thing here
 - Transpilation
   - also not a thing here
+- A community and product maturity
+  - one of the most crucial pieces, I think we can all agree on that
 
-## this might be for you if
+## This might be for you if
 - You're willing to sacrifice all of the above (and more) to reduce dependencies
 - Your tests are in a single file and concurrency doesn't impact test times
 
-## install
+## Install
 
 ```sh
 $ npm install --save-dev mvt
 ```
 
-## usage
+## Usage
 
 ```js
 const test = require('mvt')
@@ -103,18 +105,18 @@ test.bench('test.bench works', { samples: 5, max: 300 }, (assert) => {
 
 ![Output](images/output.png)
 
-## api
+## API
 
 Right now I'm feeling lazy. The full API is documented under `usage`. Eventually
 I'll add it here. You can also check the test file, though it's about the same
 as usage.
 
-## notes
+## Notes
 
 If your test file is called with the `--verbose` flag it will list all passed tests
 
 It fails fast and hard with `process.exit(1)`
 
-## license
+## License
 
 MIT © [Andrew Carpenter](https://github.com/doesdev)
