@@ -2,6 +2,12 @@
 
 > A minimum viable testing framework, aka a few test helpers, 0 dependencies
 
+# For the daring, try the beta, it's more than a few helpers
+[4.0.0 beta](https://github.com/doesdev/mvt/tree/4.0.0) provides a more full 
+featured testing experience.
+
+`npm install --save-dev mvt@beta`
+
 ## why another testing module
 I'm getting tired of Github security alerts on nested dev dependencies, typically
 from my chosen test framework. There are many actually good test frameworks out 
