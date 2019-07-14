@@ -36,12 +36,16 @@ const setup = (opts = {}) => before(async () => {
   charsChecked = true
 })
 
-const handlErr = (msg, err, noExit) => {
+const handleErr = (msg, err, noExit) => {
   process.stderr.write(`${char('fail')} ${msg}\n`)
   err = err || `Failed: ${msg}`
-  console.error(err instanceof Error ? err : new Error(err))
+  err = err instanceof Error ? err : new Error(err)
 
-  return noExit ? null : process.exit(1)
+  console.error(err)
+
+  if (noExit) throw err
+
+  return process.exit(1)
 }
 
 const runner = async (t, noExit) => {
@@ -54,7 +58,7 @@ const runner = async (t, noExit) => {
   try {
     await fn(assert(msg, failing))
   } catch (ex) {
-    if (!failing) return handlErr(msg, ex, noExit)
+    if (!failing) return handleErr(msg, ex, noExit)
 
     if (!verbose) return
 
@@ -65,7 +69,7 @@ const runner = async (t, noExit) => {
   const ms = Date.now() - start
 
   if (failing) {
-    return handlErr(msg, new Error('Passed test called with test.failing'))
+    return handleErr(msg, new Error('Passed test called with test.failing'))
   }
 
   if (!msg || !verbose) return
@@ -80,13 +84,13 @@ const benchRunner = async ({ msg, fn, benchOpts }) => {
   try {
     for (let i = 0; i < samples; i++) await fn(assert(msg, failing))
   } catch (ex) {
-    return handlErr(msg, ex)
+    return handleErr(msg, ex)
   }
 
   const ms = (Date.now() - start) / samples
 
   if (ms > max) {
-    return handlErr(msg, new Error(`Bench failed: (${ms}ms > ${max}ms)`))
+    return handleErr(msg, new Error(`Bench failed: (${ms}ms > ${max}ms)`))
   }
 
   if (!verbose) return
@@ -254,7 +258,7 @@ const wrap = (msg, passFn, err, failing) => {
 
   if (failing && !passed) throw (err instanceof Error ? err : new Error(msg))
 
-  return passed ? assert(msg, failing) : handlErr(msg, err)
+  return passed ? assert(msg, failing) : handleErr(msg, err)
 }
 
 const is = (msg, f) => (a, b) => {
