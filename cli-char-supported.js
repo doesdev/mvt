@@ -5,6 +5,7 @@ const scanner = '\x1b[6n'
 const appleTerm = process.env.TERM_PROGRAM === 'Apple_Terminal'
 
 module.exports = (char) => new Promise((resolve, reject) => {
+  if (!(process.stdin.isTTY && process.stdin.isTTY)) return resolve(false)
   let clean = false
 
   const expect = char.length + 1
@@ -13,7 +14,9 @@ module.exports = (char) => new Promise((resolve, reject) => {
     if (clean) return
 
     clean = true
-    process.stdin.off('data', checker)
+
+    if (process.stdin.off) process.stdin.off('data', checker)
+
     process.stdin.setRawMode(rawMode)
     process.stdin.unref()
     clearTimeout(timeout)
