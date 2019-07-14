@@ -44,7 +44,7 @@ const handlErr = (msg, err, noExit) => {
   return noExit ? null : process.exit(1)
 }
 
-const runner = async (t) => {
+const runner = async (t, noExit) => {
   const { msg, fn, failing, benchOpts } = t
 
   if (benchOpts) return benchRunner(t)
@@ -54,7 +54,9 @@ const runner = async (t) => {
   try {
     await fn(assert(msg, failing))
   } catch (ex) {
-    if (!failing) return handlErr(msg, ex)
+    if (!failing) return handlErr(msg, ex, noExit)
+
+    if (verbose) return
 
     const toPrint = `${char('okFail')} ${colorRed}${msg}${colorReset}\n`
     return process.stdout.write(toPrint)
@@ -103,22 +105,36 @@ const test = async (msg, fn) => {
     let last = []
     let only = []
     let normal = []
+    let countSkipped = 0
+    let countFailing = 0
 
     for (let t of queue) {
+      if (t.skipped) countSkipped += 1
+      if (t.failing) countFailing += 1
+
       if (t.first) first.push(t)
       else if (t.last) last.push(t)
       else if (t.only) only.push(t)
       else normal.push(t)
     }
 
+    const countOnly = only.length
+    const countRan = (countOnly + normal.length)
+    const plural = (c, s) => c > 1 ? `${s || 'test'}s` : `${s || 'test'}`
+
     const start = Date.now()
 
     for (let t of first) await runner(t)
 
-    if (only.length) {
-      for (let t of only) await runner(t)
-    } else {
-      for (let t of normal) await runner(t)
+    try {
+      if (countOnly) {
+        for (let t of only) await runner(t, true)
+      } else {
+        for (let t of normal) await runner(t, true)
+      }
+    } catch (ex) {
+      for (let t of last) await runner(t)
+      return process.exit(1)
     }
 
     for (let t of last) await runner(t)
@@ -127,6 +143,22 @@ const test = async (msg, fn) => {
 
     const result = `${colorGreen}All tests passed in ${ms}ms${colorReset}`
     process.stdout.write(`\n${char('good')} ${result}\n`)
+    process.stdout.write(`${colorReset}${countRan} ${plural(countRan)} declared\n`)
+
+    if (countOnly) {
+      const result = `${countOnly} ${plural(countOnly)} run with test.only`
+      process.stdout.write(`${colorBlue}${result}${colorReset}\n`)
+    } else {
+      if (countSkipped) {
+        const result = `${countSkipped} ${plural(countSkipped)} skipped`
+        process.stdout.write(`${colorYellow}${result}${colorReset}\n`)
+      }
+
+      if (countFailing) {
+        const result = `${countFailing} known ${plural(countFailing, 'failure')}`
+        process.stdout.write(`${colorRed}${result}${colorReset}\n`)
+      }
+    }
   })
 }
 
@@ -145,7 +177,7 @@ const after = (fn) => {
 const skip = (msg) => {
   const fn = () => {
     const toPrint = `${char('skip')} ${colorYellow}${msg}${colorReset}\n`
-    process.stdout.write(toPrint)
+    if (verbose) process.stdout.write(toPrint)
   }
   queue.push({ fn })
   test()
@@ -155,9 +187,9 @@ const skip = (msg) => {
 const todo = (msg) => {
   const fn = () => {
     const toPrint = `${char('todo')} ${colorBlue}${msg}${colorReset}\n`
-    process.stdout.write(toPrint)
+    if (verbose) process.stdout.write(toPrint)
   }
-  queue.push({ fn })
+  queue.push({ fn, skipped: true })
   test()
   return test
 }
