@@ -1,22 +1,41 @@
 # mvt [![NPM version](https://badge.fury.io/js/mvt.svg)](https://npmjs.org/package/mvt)   [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)   
 
-> A minimum viable testing framework, aka a few test helpers, 0 dependencies
+> Minimum Viable Testing framework, it's like AVA, if AVA sucked
 
-## why another testing module
-I'm getting tired of Github security alerts on nested dev dependencies, typically
-from my chosen test framework. There are many actually good test frameworks out 
-there, but this is all I need for many circumstances.
+## you should probably use AVA
+Because [AVA](https://github.com/avajs/ava) is awesome.
+
+## what is this
+It started as a few test helpers. I made it for small projects with minimal
+test needs. That was a bit too restrictive though. In version `4.0.0+` it became
+a blatant ripoff of AVA. Well, not really. It does about 1% of what AVA does,
+and it doesn't do that nearly as well.
+
+## if it's inferior in every way to AVA then why does it exist
+Because I need to minimize my security alerts so that I don't lose real security
+threats in the deluge. I'm often finding my devDependencies to be the culprit
+of most alerts. This is an effort to minimize recursive devDependencies.
 
 ## what's good about it
-- It has 0 dependencies (same for devDependencies)
-- It's lightweight @ < 100 sloc
+- It has 0 dependencies and devDependencies
+- That's really about it
+
+## what it lacks (way more than I can list, but here's the most notable)
+- A CLI (for now)
+  - tests must be run as `node tests/a.js`
+  - the above must be done for each test file `node tests/a.js && node tests/b.js`
+  - thus each test file gets a distinct output, so no central tracking of tests
+- Useful `Error` output
+  - you won't get a clean stack, it will be filled with useless info from `mvt`
+  - that will make it difficult to debug where problems actually occurred
+- Concurrency
+  - that's not a thing here
+- Transpilation
+  - also not a thing here
 
 ## this might be for you if
-- Your tests don't require heavy tooling
-- Concurrency doesn't make or break your testing times
-- Your tests allow for coercion to fitting truthy or a/b equality checks
-- You're okay limiting test to said coercion
-- You don't need much control over test output formatting
+- You're willing to sacrifice all of the above (and more) to reduce dependencies
+- Your tests are in a single file and concurrency doesn't impact test times
 
 ## install
 
@@ -24,42 +43,71 @@ there, but this is all I need for many circumstances.
 $ npm install --save-dev mvt
 ```
 
-## api
-
-**runTests** (message, testCallback[, meta]) - Just a wrapper that takes care to catch anything in it
-  - arguments
-    - `string` - Message to display on test start-up
-    - `function / async function` - Run your tests in this to ensure nothing is missed
-    - `object` - If anything fails this object will be printed to stderr
-
-**test** (description, truthyOrComparison[[, comparison], meta]) - Test against single truthy value or compare two values
-  - arguments
-    - `string` - Test description
-    - `any` - Will fail if not truthy OR if doesn't `===` argument 3
-    - `any` - If not `undefined` this must `===` previous argument or will fail
-    - `object` - If failed this object will be printed to stderr (if only passing truthy value the comparison arg must be `undefined`)
-  - returns `true` if test passed
-
-**testAsync** (description, asyncCallback[, meta]) - This simply awaits a promise that must resolve truthy
-  - arguments
-    - `String` - Test description
-    - `async function` - Async function / promise returning function that must resolve truthy
-    - `object` - If failed this object will be printed to stderr
-  - resolves with `true` if test passed
-
 ## usage
 
 ```js
-const { runTests, test, testAsync } = require('mvt')
+const test = require('mvt')
 
-runTests(`Testing my app`, async () => {
-  test('Should be truthy', true)
+test.setup({ verbose: true })
 
-  test('Should be equal', 1, 1)
+test.after(() => console.log('test.after invoked'))
 
-  await testAsync('Should resolve truthy', async () => Promise.resolve(true))
+test.before(() => console.log('test.before invoked'))
+
+test('assert.is works', (assert) => assert.is(1, 1))
+
+test('assert.not works', (assert) => assert.not(1, 2))
+
+test('assert.pass works', assert) => assert.pass())
+
+test.failing('test.failing and assert.fail works', (assert) => assert.fail())
+
+test('assert.truthy works', (assert) => assert.truthy(1))
+
+test('assert.falsy works', (assert) => assert.falsy(0))
+
+test('assert.deepEqual works', (assert) => assert.deepEqual([1, 2], [1, 2]))
+
+test('assert.throws works', (assert) => {
+  assert.throws(() => { throw new Error('it throws') })
+})
+
+test('assert.notThrows works', async (assert) => {
+  assert.notThrows(() => {})
+})
+
+test('assert.throwsAsync works', async (assert) => {
+  await assert.throwsAsync(() => new Promise((resolve, reject) => {
+    process.nextTick(() => reject(new Error('rejected Promise')))
+  }))
+})
+
+test('assert.notThrowsAsync works', async (assert) => {
+  await assert.notThrowsAsync(() => new Promise((resolve, reject) => {
+    process.nextTick(() => resolve('all good'))
+  }))
+})
+
+test.todo('test.todo works')
+
+test.skip('test.skip works', (assert) => assert.truthy('skipped'))
+
+test.only('test.only works', (assert) => assert.truthy('only'))
+
+test.bench('test.bench works', { samples: 5, max: 300 }, (assert) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => resolve(), 200)
+  })
 })
 ```
+
+![Output](images/output.png)
+
+## api
+
+Right now I'm feeling lazy. The full API is documented under `usage`. Eventually
+I'll add it here. You can also check the test file, though it's about the same
+as usage.
 
 ## notes
 

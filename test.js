@@ -21,7 +21,7 @@ test('assert.pass works', async (assert) => {
   assert.pass()
 })
 
-test.skip('assert.fail works', async (assert) => {
+test.failing('test.failing and assert.fail works', async (assert) => {
   assert.fail()
 })
 
@@ -71,9 +71,7 @@ test('assert.notThrowsAsync works', async (assert) => {
 
 test.todo('test.todo works')
 
-test.failing('test.failing works', (assert) => {
-  assert.is(1, 2)
-})
+test.skip('test.skip works', (assert) => assert.truthy('skipped'))
 
 test.bench('test.bench works', { samples: 5, max: 300 }, (assert) => {
   return new Promise((resolve, reject) => {

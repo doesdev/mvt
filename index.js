@@ -56,7 +56,7 @@ const runner = async (t, noExit) => {
   } catch (ex) {
     if (!failing) return handlErr(msg, ex, noExit)
 
-    if (verbose) return
+    if (!verbose) return
 
     const toPrint = `${char('okFail')} ${colorRed}${msg}${colorReset}\n`
     return process.stdout.write(toPrint)
@@ -105,10 +105,12 @@ const test = async (msg, fn) => {
     let last = []
     let only = []
     let normal = []
+    let countTodo = 0
     let countSkipped = 0
     let countFailing = 0
 
     for (let t of queue) {
+      if (t.todo) countTodo += 1
       if (t.skipped) countSkipped += 1
       if (t.failing) countFailing += 1
 
@@ -149,6 +151,11 @@ const test = async (msg, fn) => {
       const result = `${countOnly} ${plural(countOnly)} run with test.only`
       process.stdout.write(`${colorBlue}${result}${colorReset}\n`)
     } else {
+      if (countTodo) {
+        const result = `${countTodo} ${plural(countTodo)} marked as TODO`
+        process.stdout.write(`${colorBlue}${result}${colorReset}\n`)
+      }
+
       if (countSkipped) {
         const result = `${countSkipped} ${plural(countSkipped)} skipped`
         process.stdout.write(`${colorYellow}${result}${colorReset}\n`)
@@ -179,7 +186,7 @@ const skip = (msg) => {
     const toPrint = `${char('skip')} ${colorYellow}${msg}${colorReset}\n`
     if (verbose) process.stdout.write(toPrint)
   }
-  queue.push({ fn })
+  queue.push({ fn, skipped: true })
   test()
   return test
 }
@@ -189,7 +196,7 @@ const todo = (msg) => {
     const toPrint = `${char('todo')} ${colorBlue}${msg}${colorReset}\n`
     if (verbose) process.stdout.write(toPrint)
   }
-  queue.push({ fn, skipped: true })
+  queue.push({ fn, todo: true })
   test()
   return test
 }
