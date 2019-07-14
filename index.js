@@ -228,7 +228,11 @@ const assert = (msg, f) => ({
   fail: fail(msg, f),
   truthy: truthy(msg, f),
   falsy: falsy(msg, f),
-  deepEqual: deepEqual(msg, f)
+  deepEqual: deepEqual(msg, f),
+  throws: throws(msg, f),
+  notThrows: notThrows(msg, f),
+  throwsAsync: throwsAsync(msg, f),
+  notThrowsAsync: notThrowsAsync(msg, f)
 })
 
 const toPrint = (s) => typeof s === 'string' ? `'${s}'` : s
@@ -275,6 +279,30 @@ const deepEqual = (msg, f) => (a, b) => {
     `not deepEqual:\nA:\n${toPrint(a)}\nB:\n${toPrint(b)}`,
     f
   )
+}
+
+const throws = (msg, f) => (a) => {
+  let threw
+  try { a() } catch (ex) { threw = true }
+  return wrap(msg, () => threw, `did not throw error`, f)
+}
+
+const notThrows = (msg, f) => (a) => {
+  let err
+  try { a() } catch (ex) { err = ex }
+  return wrap(msg, () => !err, err, f)
+}
+
+const throwsAsync = (msg, f) => async (a) => {
+  let threw
+  try { await a() } catch (ex) { threw = true }
+  return wrap(msg, () => threw, `did not throw error`, f)
+}
+
+const notThrowsAsync = (msg, f) => async (a) => {
+  let err
+  try { await a() } catch (ex) { err = ex }
+  return wrap(msg, () => !err, err, f)
 }
 
 Object.assign(test, {

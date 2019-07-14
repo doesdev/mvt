@@ -49,6 +49,26 @@ test('assert.deepEqual works', async (assert) => {
   )
 })
 
+test('assert.throws works', async (assert) => {
+  assert.throws(() => { throw new Error('it throws') })
+})
+
+test('assert.notThrows works', async (assert) => {
+  assert.notThrows(() => {})
+})
+
+test('assert.throwsAsync works', async (assert) => {
+  await assert.throwsAsync(() => new Promise((resolve, reject) => {
+    process.nextTick(() => reject(new Error('rejected Promise')))
+  }))
+})
+
+test('assert.notThrowsAsync works', async (assert) => {
+  await assert.notThrowsAsync(() => new Promise((resolve, reject) => {
+    process.nextTick(() => resolve('all good'))
+  }))
+})
+
 test.todo('test.todo works')
 
 test.failing('test.failing works', (assert) => {
