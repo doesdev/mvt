@@ -2,6 +2,7 @@
 
 const readline = require('readline')
 const scanner = '\x1b[6n'
+const appleTerm = process.env.TERM_PROGRAM === 'Apple_Terminal'
 
 module.exports = (char) => new Promise((resolve, reject) => {
   let clean = false
@@ -24,7 +25,8 @@ module.exports = (char) => new Promise((resolve, reject) => {
   }
 
   const checker = (d) => {
-    return cleanup(+((`${d}` || '').match(/;(\d+)R/) || [])[1] === expect)
+    const val = +((`${d}` || '').match(/;(\d+)R/) || [])[1]
+    return cleanup(val === expect || (appleTerm && val - 1 === expect))
   }
 
   readline.clearLine(process.stdout, 0)
