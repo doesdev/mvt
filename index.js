@@ -44,7 +44,13 @@ const handlErr = (msg, err, noExit) => {
   return noExit ? null : process.exit(1)
 }
 
-const runner = async ({ msg, fn, failing }) => {
+const runner = async (t) => {
+  const { msg, fn, failing, benchOpts } = t
+
+  if (benchOpts) return benchRunner(t)
+
+  const start = Date.now()
+
   try {
     await fn(assert(msg, failing))
   } catch (ex) {
@@ -54,13 +60,36 @@ const runner = async ({ msg, fn, failing }) => {
     return process.stdout.write(toPrint)
   }
 
+  const ms = Date.now() - start
+
   if (failing) {
     return handlErr(msg, new Error('Passed test called with test.failing'))
   }
 
   if (!msg || !verbose) return
 
-  process.stdout.write(`${char('good')} ${msg}\n`)
+  process.stdout.write(`${char('good')} ${msg} (${ms}ms)\n`)
+}
+
+const benchRunner = async ({ msg, fn, benchOpts }) => {
+  const { samples, max } = benchOpts
+  const start = Date.now()
+
+  try {
+    for (let i = 0; i < samples; i++) await fn(assert(msg, failing))
+  } catch (ex) {
+    return handlErr(msg, ex)
+  }
+
+  const ms = (Date.now() - start) / samples
+
+  if (ms > max) {
+    return handlErr(msg, new Error(`Bench failed: (${ms}ms > ${max}ms)`))
+  }
+
+  if (!verbose) return
+
+  process.stdout.write(`${char('good')} ${msg} (${ms}ms)\n`)
 }
 
 const test = async (msg, fn) => {
@@ -82,6 +111,8 @@ const test = async (msg, fn) => {
       else normal.push(t)
     }
 
+    const start = Date.now()
+
     for (let t of first) await runner(t)
 
     if (only.length) {
@@ -90,7 +121,12 @@ const test = async (msg, fn) => {
       for (let t of normal) await runner(t)
     }
 
-    for (let t of first) await runner(t)
+    for (let t of last) await runner(t)
+
+    const ms = Date.now() - start
+
+    const result = `${colorGreen}All tests passed in ${ms}ms${colorReset}`
+    process.stdout.write(`\n${char('good')} ${result}\n`)
   })
 }
 
@@ -138,6 +174,21 @@ const failing = (msg, fn) => {
   return test
 }
 
+const bench = (msg, benchOpts = {}, fn) => {
+  if (typeof benchOpts === 'function') {
+    fn = benchOpts
+    benchOpts = {}
+  }
+
+  benchOpts.max = benchOpts.max || 100
+  benchOpts.samples = benchOpts.samples || 10
+
+  queue.push({ msg, fn, benchOpts })
+  test()
+
+  return test
+}
+
 const assert = (msg, f) => ({
   is: is(msg, f),
   not: not(msg, f),
@@ -145,8 +196,7 @@ const assert = (msg, f) => ({
   fail: fail(msg, f),
   truthy: truthy(msg, f),
   falsy: falsy(msg, f),
-  deepEqual: deepEqual(msg, f),
-  bench: bench(msg, f)
+  deepEqual: deepEqual(msg, f)
 })
 
 const toPrint = (s) => typeof s === 'string' ? `'${s}'` : s
@@ -195,8 +245,6 @@ const deepEqual = (msg, f) => (a, b) => {
   )
 }
 
-const bench = (msg, f) => () => {}
-
 Object.assign(test, {
   assert,
   setup,
@@ -205,7 +253,8 @@ Object.assign(test, {
   skip,
   todo,
   only,
-  failing
+  failing,
+  bench
 })
 
 setup()

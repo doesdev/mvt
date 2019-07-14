@@ -54,3 +54,9 @@ test.todo('test.todo works')
 test.failing('test.failing works', (assert) => {
   assert.is(1, 2)
 })
+
+test.bench('test.bench works', { samples: 5, max: 300 }, (assert) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => resolve(), 200)
+  })
+})
