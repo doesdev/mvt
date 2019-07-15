@@ -1,5 +1,7 @@
 'use strict'
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'test'
+
 const { deepStrictEqual, notDeepStrictEqual } = require('assert').strict
 const checkChar = require('./cli-char-supported')
 const colorReset = `\u001b[0m`
