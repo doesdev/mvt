@@ -49,6 +49,15 @@ test('assert.deepEqual works', async (assert) => {
   )
 })
 
+test('assert.notDeepEqual works', async (assert) => {
+  assert.notDeepEqual(1, 2)
+  assert.notDeepEqual([3, 2, 1], [1, 2, 3])
+  assert.notDeepEqual(
+    { a: [2, 1], b: { a: { c: 2 } } },
+    { a: [1, 2], b: { a: { c: 2 } } }
+  )
+})
+
 test('assert.throws works', (assert) => {
   assert.throws(() => { throw new Error('it throws') })
 })

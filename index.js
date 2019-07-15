@@ -1,6 +1,6 @@
 'use strict'
 
-const { deepStrictEqual } = require('assert').strict
+const { deepStrictEqual, notDeepStrictEqual } = require('assert').strict
 const checkChar = require('./cli-char-supported')
 const colorReset = `\u001b[0m`
 const colorGreen = `\u001b[32m`
@@ -260,6 +260,7 @@ const assert = (msg, f) => ({
   truthy: truthy(msg, f),
   falsy: falsy(msg, f),
   deepEqual: deepEqual(msg, f),
+  notDeepEqual: notDeepEqual(msg, f),
   throws: throws(msg, f),
   notThrows: notThrows(msg, f),
   throwsAsync: throwsAsync(msg, f),
@@ -316,6 +317,15 @@ const deepEqual = (msg, f) => (a, b) => {
     msg,
     () => deepStrictEqual(a, b) || true,
     `not deepEqual:\nA:\n${toPrint(a)}\nB:\n${toPrint(b)}`,
+    f
+  )
+}
+
+const notDeepEqual = (msg, f) => (a, b) => {
+  return wrap(
+    msg,
+    () => notDeepStrictEqual(a, b) || true,
+    `is deepEqual:\nA:\n${toPrint(a)}\nB:\n${toPrint(b)}`,
     f
   )
 }

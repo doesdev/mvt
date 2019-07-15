@@ -66,13 +66,15 @@ test.failing('test.failing and assert.fail works', (assert) => assert.fail())
 
 test('assert.true works', (assert) => assert.true(true))
 
-test('assert.false works', (assert) => assert.false(0))
+test('assert.false works', (assert) => assert.false(false))
 
 test('assert.truthy works', (assert) => assert.truthy(1))
 
 test('assert.falsy works', (assert) => assert.falsy(0))
 
 test('assert.deepEqual works', (assert) => assert.deepEqual([1, 2], [1, 2]))
+
+test('assert.notDeepEqual works', (assert) => assert.notDeepEqual([2, 1], [1, 2]))
 
 test('assert.throws works', (assert) => {
   assert.throws(() => { throw new Error('it throws') })
