@@ -24,6 +24,22 @@ const char = (n) => {
   return `${chars[n].useEmoji ? chars[n].emoji : chars[n].plain}${colorReset}`
 }
 
+const parseMs = (str) => {
+  const intvls = { s: 1000, m: 60000, h: 3600000, d: 86400000 }
+  const num = parseFloat(str)
+  if (Number.isNaN(num)) return 0
+  const intvl = (str + '').replace((num + ''), '').trim().charAt(0)
+  return num * (intvls[intvl] || 1)
+}
+
+const fmtMs = (ms) => {
+  ms = ms || 0
+  if (ms < 1000) return `${ms || 0}ms`
+  if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`
+  let mins = parseInt(ms / 60000, 10)
+  return `${mins}m ${((ms - (mins * 60000)) / 1000).toFixed(1)}s`
+}
+
 const setup = (opts = {}) => before(async () => {
   verbose = opts.verbose !== undefined ? !!opts.verbose : verbose
 
@@ -74,7 +90,7 @@ const runner = async (t, noExit) => {
 
   if (!msg || !verbose) return
 
-  process.stdout.write(`${char('good')} ${msg} (${ms}ms)\n`)
+  process.stdout.write(`${char('good')} ${msg} (${fmtMs(ms)})\n`)
 }
 
 const benchRunner = async ({ msg, fn, benchOpts }) => {
@@ -87,15 +103,16 @@ const benchRunner = async ({ msg, fn, benchOpts }) => {
     return handleErr(msg, ex)
   }
 
-  const ms = (Date.now() - start) / samples
+  const ms = parseInt((Date.now() - start) / samples, 10)
 
   if (ms > max) {
-    return handleErr(msg, new Error(`Bench failed: (${ms}ms > ${max}ms)`))
+    const maxErr = new Error(`Bench failed: (${fmtMs(ms)} > ${fmtMs(max)})`)
+    return handleErr(msg, maxErr)
   }
 
   if (!verbose) return
 
-  process.stdout.write(`${char('good')} ${msg} (${ms}ms)\n`)
+  process.stdout.write(`${char('good')} ${msg} (${fmtMs(ms)} avg)\n`)
 }
 
 const test = async (msg, fn) => {
@@ -147,7 +164,7 @@ const test = async (msg, fn) => {
 
     const ms = Date.now() - start
 
-    const result = `${colorGreen}All tests passed in ${ms}ms${colorReset}`
+    const result = `${colorGreen}All tests passed in ${fmtMs(ms)}${colorReset}`
     process.stdout.write(`\n${char('good')} ${result}\n`)
     process.stdout.write(`${colorReset}${countRan} ${plural(countRan)} declared\n`)
 
@@ -219,11 +236,12 @@ const failing = (msg, fn) => {
 
 const bench = (msg, benchOpts = {}, fn) => {
   if (typeof benchOpts === 'function') {
+    const oldFn = fn
     fn = benchOpts
-    benchOpts = {}
+    benchOpts = oldFn || {}
   }
 
-  benchOpts.max = benchOpts.max || 100
+  benchOpts.max = parseMs(benchOpts.max) || 100
   benchOpts.samples = benchOpts.samples || 10
 
   queue.push({ msg, fn, benchOpts })
