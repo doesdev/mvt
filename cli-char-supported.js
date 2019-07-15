@@ -15,8 +15,7 @@ module.exports = (char) => new Promise((resolve, reject) => {
 
     clean = true
 
-    if (process.stdin.off) process.stdin.off('data', checker)
-
+    process.stdin.removeListener('data', checker)
     process.stdin.setRawMode(rawMode)
     process.stdin.unref()
     clearTimeout(timeout)

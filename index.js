@@ -237,6 +237,8 @@ const assert = (msg, f) => ({
   not: not(msg, f),
   pass: pass(msg, f),
   fail: fail(msg, f),
+  true: isTrue(msg, f),
+  false: isFalse(msg, f),
   truthy: truthy(msg, f),
   falsy: falsy(msg, f),
   deepEqual: deepEqual(msg, f),
@@ -273,6 +275,14 @@ const pass = (msg, f) => () => wrap(msg, () => true, null, f)
 
 const fail = (msg, f) => () => {
   return wrap(msg, () => false, 'called with assert.fail', f)
+}
+
+const isTrue = (msg, f) => (a) => {
+  return wrap(msg, () => a === true, `${toPrint(a)} !== true`, f)
+}
+
+const isFalse = (msg, f) => (a) => {
+  return wrap(msg, () => a === false, `${toPrint(a)} !== false`, f)
 }
 
 const truthy = (msg, f) => (a) => {

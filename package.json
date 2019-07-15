@@ -1,6 +1,6 @@
 {
   "name": "mvt",
-  "version": "4.0.0-beta.2",
+  "version": "4.0.0-beta.3",
   "description": "A minimum viable testing framework, aka a few test helpers, 0 dependencies",
   "main": "index.js",
   "files": [

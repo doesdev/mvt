@@ -17,13 +17,13 @@ test('assert.not works', async (assert) => {
   assert.not('a', 'b')
 })
 
-test('assert.pass works', async (assert) => {
-  assert.pass()
-})
+test('assert.pass works', (assert) => assert.pass())
 
-test.failing('test.failing and assert.fail works', async (assert) => {
-  assert.fail()
-})
+test.failing('test.failing and assert.fail works', (assert) => assert.fail())
+
+test('assert.true works', (assert) => assert.true(true))
+
+test('assert.false works', (assert) => assert.false(false))
 
 test('assert.truthy works', async (assert) => {
   assert.truthy(1)
@@ -49,11 +49,11 @@ test('assert.deepEqual works', async (assert) => {
   )
 })
 
-test('assert.throws works', async (assert) => {
+test('assert.throws works', (assert) => {
   assert.throws(() => { throw new Error('it throws') })
 })
 
-test('assert.notThrows works', async (assert) => {
+test('assert.notThrows works', (assert) => {
   assert.notThrows(() => {})
 })
 

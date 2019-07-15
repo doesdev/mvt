@@ -64,6 +64,10 @@ test('assert.pass works', assert) => assert.pass())
 
 test.failing('test.failing and assert.fail works', (assert) => assert.fail())
 
+test('assert.true works', (assert) => assert.true(true))
+
+test('assert.false works', (assert) => assert.false(0))
+
 test('assert.truthy works', (assert) => assert.truthy(1))
 
 test('assert.falsy works', (assert) => assert.falsy(0))
