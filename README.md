@@ -42,7 +42,7 @@ of most alerts. This is an effort to minimize recursive devDependencies.
 ## Install
 
 ```sh
-$ npm install --save-dev mvt
+$ npm install --save-dev mvt@beta
 ```
 
 ## Usage
