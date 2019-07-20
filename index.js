@@ -82,7 +82,8 @@ const runner = async (t, noExit) => {
 
     if (!verbose) return
 
-    const toPrint = `${char('okFail')} ${colorRed}${msg}${colorReset}\n`
+    const ms = ` (${fmtMs(Date.now() - start)})`
+    const toPrint = `${char('okFail')} ${colorRed}${msg}${ms}${colorReset}\n`
     return process.stdout.write(toPrint)
   }
 
