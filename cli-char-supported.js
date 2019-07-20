@@ -3,8 +3,10 @@
 const readline = require('readline')
 const scanner = '\x1b[6n'
 const appleTerm = process.env.TERM_PROGRAM === 'Apple_Terminal'
+const xterm = process.env.TERM === 'xterm-256color'
+const charOffset = appleTerm || xterm ? -1 : 0
 
-module.exports = (char) => new Promise((resolve, reject) => {
+const checkChar = (char) => new Promise((resolve, reject) => {
   if (!(process.stdin.isTTY && process.stdin.isTTY)) return resolve(false)
   let clean = false
 
@@ -28,7 +30,7 @@ module.exports = (char) => new Promise((resolve, reject) => {
 
   const checker = (d) => {
     const val = +((`${d}` || '').match(/;(\d+)R/) || [])[1]
-    return cleanup(val === expect || (appleTerm && val - 1 === expect))
+    return cleanup(val === expect || ((val + charOffset) === expect))
   }
 
   readline.clearLine(process.stdout, 0)
@@ -40,3 +42,5 @@ module.exports = (char) => new Promise((resolve, reject) => {
   process.stdout.write(scanner)
   let timeout = setTimeout(() => cleanup(false), 500)
 })
+
+module.exports = { checkChar, charOffset: Math.abs(charOffset) }

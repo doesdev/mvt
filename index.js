@@ -3,12 +3,13 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'test'
 
 const { deepStrictEqual, notDeepStrictEqual } = require('assert').strict
-const checkChar = require('./cli-char-supported')
+const { checkChar, charOffset } = require('./cli-char-supported')
 const colorReset = `\u001b[0m`
 const colorGreen = `\u001b[32m`
 const colorRed = `\u001b[31m`
 const colorBlue = `\u001b[34m`
 const colorYellow = `\u001b[33m`
+const buf = `${Array(charOffset + 1).join(' ')}`
 const queue = []
 
 let verbose = process.argv.some((a) => a === '--verbose' || a === '-v')
@@ -23,7 +24,8 @@ const chars = {
 }
 
 const char = (n) => {
-  return `${chars[n].useEmoji ? chars[n].emoji : chars[n].plain}${colorReset}`
+  if (!chars[n].useEmoji) return `${chars[n].plain}${colorReset}`
+  return `${chars[n].emoji}${colorReset}${buf}`
 }
 
 const parseMs = (str) => {
