@@ -1,10 +1,7 @@
 'use strict'
 
 const test = require('./../index')
-const path = require('path')
 const { writeRunDeleteTest: runner } = require('./_helpers')
-
-test.setup({ fileName: path.basename(__filename) })
 
 test.before(() => console.log('BEFORE: test.before invoked'))
 

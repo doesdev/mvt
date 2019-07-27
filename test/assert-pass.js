@@ -1,9 +1,6 @@
 'use strict'
 
 const test = require('./../index')
-const path = require('path')
-
-test.setup({ fileName: path.basename(__filename) })
 
 test('assert.is works', async (assert) => {
   assert.is(1, 1)

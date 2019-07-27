@@ -19,12 +19,10 @@ of most alerts. This is an effort to minimize recursive devDependencies.
 
 ## What's good about it
 - It has 0 dependencies (and devDependencies)
-- It's more emojified than AVA (of course that matters 0)
+- It's more emojified than AVA (of course that matters zero)
+- It can be called via the `mvt` cli or by simply calling `node [test-file].js`
 
 ## What it lacks (way more than I can list, but here's the most notable)
-- A CLI (for now)
-  - tests must be run as `node tests/a.js`
-  - for multiple files you must require them from an entry test file
 - Useful `Error` output
   - you won't get a clean stack, it will be filled with useless info from `mvt`
   - that will make it difficult to debug where problems actually occurred
@@ -45,6 +43,21 @@ $ npm install --save-dev mvt@beta
 ```
 
 ## Usage
+
+```sh
+mvt
+# OR
+mvt test
+# OR
+mvt test.js test2.js
+# OR
+mvt --verbose
+# OR
+mvt test --verbose
+# OR
+node test.js --verbose
+# etc...
+```
 
 ```js
 const test = require('mvt')

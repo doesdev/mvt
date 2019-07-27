@@ -1,14 +1,18 @@
 {
   "name": "mvt",
-  "version": "4.0.0-beta.6",
+  "version": "4.0.0-beta.7",
   "description": "Minimum Viable Testing framework, it's like AVA, if AVA sucked",
   "main": "index.js",
   "files": [
+    "cli.js",
     "index.js",
     "cli-char-supported.js"
   ],
+  "bin": {
+    "mvt": "cli.js"
+  },
   "scripts": {
-    "test": "node test/index.js --verbose"
+    "test": "node cli.js --verbose"
   },
   "repository": {
     "type": "git",
