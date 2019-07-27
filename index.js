@@ -4,6 +4,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'test'
 
 const { deepStrictEqual, notDeepStrictEqual } = require('assert').strict
 const { checkChar, charOffset } = require('./cli-char-supported')
+const readline = require('readline')
 const colorReset = `\u001b[0m`
 const colorGreen = `\u001b[32m`
 const colorRed = `\u001b[31m`
@@ -14,6 +15,7 @@ const queue = []
 
 let verbose = process.argv.some((a) => a === '--verbose' || a === '-v')
 let fileName, lastFileName
+let fileTestCount = 0
 
 let charsChecked = false
 const chars = {
@@ -75,13 +77,23 @@ const handleErr = (msg, err, noExit) => {
   return process.exit(1)
 }
 
+const writeNonVerboseCount = () => {
+  const count = ++fileTestCount
+  readline.cursorTo(process.stdout, 0)
+  readline.moveCursor(process.stdout, 0, -2)
+  process.stdout.write(`\n${char('good')} ${count} tests passed\n`)
+}
+
 const runner = async (t, noExit) => {
   const { msg, fn, failing, benchOpts, fileName: currFile } = t
 
   if (currFile) {
     const fileRunMsg = `\nRunning tests for ${currFile}\n\n`
 
-    if (currFile !== lastFileName) process.stdout.write(fileRunMsg)
+    if (currFile !== lastFileName) {
+      fileTestCount = 0
+      process.stdout.write(fileRunMsg)
+    }
 
     lastFileName = currFile
   }
@@ -95,11 +107,13 @@ const runner = async (t, noExit) => {
   } catch (ex) {
     if (!failing) return handleErr(msg, ex, noExit)
 
-    if (!verbose) return
-
-    const ms = ` (${fmtMs(Date.now() - start)})`
-    const toPrint = `${char('okFail')} ${colorRed}${msg}${ms}${colorReset}\n`
-    return process.stdout.write(toPrint)
+    if (verbose) {
+      const ms = ` (${fmtMs(Date.now() - start)})`
+      const toPrint = `${char('okFail')} ${colorRed}${msg}${ms}${colorReset}\n`
+      return process.stdout.write(toPrint)
+    } else {
+      return writeNonVerboseCount()
+    }
   }
 
   const ms = Date.now() - start
@@ -108,9 +122,13 @@ const runner = async (t, noExit) => {
     return handleErr(msg, new Error('Passed test called with test.failing'))
   }
 
-  if (!msg || !verbose) return
+  if (!msg) return
 
-  process.stdout.write(`${char('good')} ${msg} (${fmtMs(ms)})\n`)
+  if (verbose) {
+    process.stdout.write(`${char('good')} ${msg} (${fmtMs(ms)})\n`)
+  } else {
+    writeNonVerboseCount()
+  }
 }
 
 const benchRunner = async ({ msg, fn, benchOpts }) => {
@@ -130,9 +148,11 @@ const benchRunner = async ({ msg, fn, benchOpts }) => {
     return handleErr(msg, maxErr)
   }
 
-  if (!verbose) return
-
-  process.stdout.write(`${char('good')} ${msg} (${fmtMs(ms)} avg)\n`)
+  if (verbose) {
+    process.stdout.write(`${char('good')} ${msg} (${fmtMs(ms)} avg)\n`)
+  } else {
+    writeNonVerboseCount()
+  }
 }
 
 const test = async (msg, fn) => {
