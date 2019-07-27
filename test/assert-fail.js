@@ -105,7 +105,6 @@ test('assert.deepEqual works', async (assert) => {
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
-  assert.contains(result.stderr, 'values to be strictly deep-equal')
 })
 
 test('assert.notDeepEqual works', async (assert) => {
@@ -119,7 +118,6 @@ test('assert.notDeepEqual works', async (assert) => {
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
-  assert.contains(result.stderr, 'not to be strictly deep-equal')
 })
 
 test('assert.throws works', async (assert) => {
