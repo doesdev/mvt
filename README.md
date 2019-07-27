@@ -8,23 +8,23 @@ Because [AVA](https://github.com/avajs/ava) is awesome.
 ## What is this
 It started as a few test helpers. I made it for small projects with minimal
 test needs. That was a bit too restrictive though. In version `4.0.0+` it became
-a blatant ripoff of AVA. Well, not really. It does about 1% of what AVA does,
-and it doesn't do that nearly as well.
+a blatant ripoff of AVA. Although, it does a small fraction of what AVA does.
 
-## If it's inferior in every way to AVA then why does it exist
+## If it's inferior to AVA then why does it exist
 Because I need to minimize my security alerts so that I don't lose real security
 threats in the deluge. I'm often finding my devDependencies to be the culprit
 of most alerts. This is an effort to minimize recursive devDependencies.
 
+[But It's Just a Dev Dependency...](https://medium.com/swlh/but-its-just-a-dev-dependency-566646ebeec9)
+
 ## What's good about it
-- It has 0 dependencies and devDependencies
-- That's really about it
+- It has 0 dependencies (and devDependencies)
+- It's more emojified than AVA (of course that matters 0)
 
 ## What it lacks (way more than I can list, but here's the most notable)
 - A CLI (for now)
   - tests must be run as `node tests/a.js`
-  - the above must be done for each test file `node tests/a.js && node tests/b.js`
-  - thus each test file gets a distinct output, so no central tracking of tests
+  - for multiple files you must require them from an entry test file
 - Useful `Error` output
   - you won't get a clean stack, it will be filled with useless info from `mvt`
   - that will make it difficult to debug where problems actually occurred
@@ -33,11 +33,10 @@ of most alerts. This is an effort to minimize recursive devDependencies.
 - Transpilation
   - also not a thing here
 - A community and product maturity
-  - one of the most crucial pieces, I think we can all agree on that
+  - among the most crucial elements
 
 ## This might be for you if
 - You're willing to sacrifice all of the above (and more) to reduce dependencies
-- Your tests are in a single file and concurrency doesn't impact test times
 
 ## Install
 
@@ -56,25 +55,49 @@ test.after(() => console.log('test.after invoked'))
 
 test.before(() => console.log('test.before invoked'))
 
-test('assert.is works', (assert) => assert.is(1, 1))
+test('assert.is works', (assert) => {
+  assert.is(1, 1)
+})
 
-test('assert.not works', (assert) => assert.not(1, 2))
+test('assert.not works', (assert) => {
+  assert.not(1, 2)
+})
 
-test('assert.pass works', assert) => assert.pass())
+test('assert.pass works', assert) => {
+  assert.pass()
+})
 
-test.failing('test.failing and assert.fail works', (assert) => assert.fail())
+test.failing('test.failing and assert.fail works', (assert) => {
+  assert.fail()
+})
 
-test('assert.true works', (assert) => assert.true(true))
+test('assert.true works', (assert) => {
+  assert.true(true)
+})
 
-test('assert.false works', (assert) => assert.false(false))
+test('assert.false works', (assert) => {
+  assert.false(false)
+})
 
-test('assert.truthy works', (assert) => assert.truthy(1))
+test('assert.truthy works', (assert) => {
+  assert.truthy(1)
+})
 
-test('assert.falsy works', (assert) => assert.falsy(0))
+test('assert.falsy works', (assert) => {
+  assert.falsy(0)
+})
 
-test('assert.deepEqual works', (assert) => assert.deepEqual([1, 2], [1, 2]))
+test('assert.contains works', (assert) => {
+  assert.contains('a few words', 'few')
+})
 
-test('assert.notDeepEqual works', (assert) => assert.notDeepEqual([2, 1], [1, 2]))
+test('assert.deepEqual works', (assert) => {
+  assert.deepEqual([1, 2], [1, 2])
+})
+
+test('assert.notDeepEqual works', (assert) => {
+  assert.notDeepEqual([2, 1], [1, 2])
+})
 
 test('assert.throws works', (assert) => {
   assert.throws(() => { throw new Error('it throws') })

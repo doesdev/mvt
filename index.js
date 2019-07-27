@@ -13,6 +13,7 @@ const buf = `${Array(charOffset + 1).join(' ')}`
 const queue = []
 
 let verbose = process.argv.some((a) => a === '--verbose' || a === '-v')
+let fileName, lastFileName
 
 let charsChecked = false
 const chars = {
@@ -44,8 +45,9 @@ const fmtMs = (ms) => {
   return `${mins}m ${((ms - (mins * 60000)) / 1000).toFixed(1)}s`
 }
 
-const setup = (opts = {}) => before(async () => {
+const _setup = async (opts = {}) => {
   verbose = opts.verbose !== undefined ? !!opts.verbose : verbose
+  fileName = opts.fileName
 
   if (charsChecked) return
 
@@ -54,6 +56,11 @@ const setup = (opts = {}) => before(async () => {
   }
 
   charsChecked = true
+}
+
+const setup = (opts = {}) => queue.push({
+  fn: () => _setup(opts),
+  fileName: opts.fileName
 })
 
 const handleErr = (msg, err, noExit) => {
@@ -69,7 +76,15 @@ const handleErr = (msg, err, noExit) => {
 }
 
 const runner = async (t, noExit) => {
-  const { msg, fn, failing, benchOpts } = t
+  const { msg, fn, failing, benchOpts, fileName: currFile } = t
+
+  if (currFile) {
+    const fileRunMsg = `\nRunning tests for ${currFile}\n\n`
+
+    if (currFile !== lastFileName) process.stdout.write(fileRunMsg)
+
+    lastFileName = currFile
+  }
 
   if (benchOpts) return benchRunner(t)
 
@@ -121,7 +136,7 @@ const benchRunner = async ({ msg, fn, benchOpts }) => {
 }
 
 const test = async (msg, fn) => {
-  if (msg && fn) queue.push({ msg, fn })
+  if (msg && fn) queue.push({ msg, fn, fileName })
 
   const curLen = queue.length
   process.nextTick(async () => {
@@ -132,6 +147,7 @@ const test = async (msg, fn) => {
     let only = []
     let normal = []
     let countTodo = 0
+    let countNormal = 0
     let countSkipped = 0
     let countFailing = 0
 
@@ -139,6 +155,7 @@ const test = async (msg, fn) => {
       if (t.todo) countTodo += 1
       if (t.skipped) countSkipped += 1
       if (t.failing) countFailing += 1
+      if (t.msg) countNormal += 1
 
       if (t.first) first.push(t)
       else if (t.last) last.push(t)
@@ -147,7 +164,6 @@ const test = async (msg, fn) => {
     }
 
     const countOnly = only.length
-    const countRan = (countOnly + normal.length)
     const plural = (c, s) => c > 1 ? `${s || 'test'}s` : `${s || 'test'}`
 
     const start = Date.now()
@@ -171,7 +187,9 @@ const test = async (msg, fn) => {
 
     const result = `${colorGreen}All tests passed in ${fmtMs(ms)}${colorReset}`
     process.stdout.write(`\n${char('good')} ${result}\n`)
-    process.stdout.write(`${colorReset}${countRan} ${plural(countRan)} declared\n`)
+    process.stdout.write(
+      `${colorReset}${countNormal} ${plural(countNormal)} declared\n`
+    )
 
     if (countOnly) {
       const result = `${countOnly} ${plural(countOnly)} run with test.only`
@@ -264,6 +282,7 @@ const assert = (msg, f) => ({
   false: isFalse(msg, f),
   truthy: truthy(msg, f),
   falsy: falsy(msg, f),
+  contains: contains(msg, f),
   deepEqual: deepEqual(msg, f),
   notDeepEqual: notDeepEqual(msg, f),
   throws: throws(msg, f),
@@ -315,6 +334,12 @@ const truthy = (msg, f) => (a) => {
 
 const falsy = (msg, f) => (a) => {
   return wrap(msg, () => !a, `not falsy: ${toPrint(a)}`, f)
+}
+
+const contains = (msg, f) => (a, b) => {
+  const asStr = JSON.stringify(a, null, 2)
+  const err = `${toPrint(asStr)} does not contain ${b}`
+  return wrap(msg, () => asStr.indexOf(b) !== -1, err, f)
 }
 
 const deepEqual = (msg, f) => (a, b) => {
@@ -371,6 +396,6 @@ Object.assign(test, {
   bench
 })
 
-setup()
+before(_setup)
 
 module.exports = test
