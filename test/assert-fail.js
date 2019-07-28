@@ -31,7 +31,7 @@ test('assert.is works', async (assert) => {
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
-  assert.contains(result.stderr, 'actual - expected')
+  assert.contains(result.stderr, 'Values should be identical')
 })
 
 test('assert.not works', async (assert) => {
