@@ -5,13 +5,33 @@ const { writeRunDeleteTest: runner } = require('./_helpers')
 
 test('assert.is works', async (assert) => {
   const js = `test('assert.is works', async (assert) => {
-    assert.is(1, 2)
+    const a = \`
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+      Lorem Ipsum has been the industry's standard dummy text ever since the
+      1500s, when an unknown printer took a galley of type and scrambled it to
+      make a type specimen book. It has survived not only five centuries, but
+      also the leap into electronic typesetting, remaining essentially
+      unchanged. It was popularised in the 1960s with the release of Letraset
+      sheets containing Lorem Ipsum passages, and more recently with desktop
+      publishing software like Aldus PageMaker including versions of Lorem Ipsum
+    \`
+    const b = \`
+      Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+      Lorem Ipsum has been the industry's standard dummy text ever since the
+      1500s, when an known printer took a galley of type and scrambled it to
+      make a type specimen book. It has survived not only five centuries, but
+      also the leap into electronic typesetting, remaining essentially
+      unchanged. It was popularised in the 1970s with the release of Letraset
+      sheets containing Lorem Ipsum passages, and more recently with desktop
+      publishing software like Aldus PageMaker including versions of Lorem Ipsum
+    \`
+    assert.is(a, b)
   })`
 
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
-  assert.contains(result.stderr, '1 !== 2')
+  assert.contains(result.stderr, 'actual - expected')
 })
 
 test('assert.not works', async (assert) => {
@@ -33,7 +53,7 @@ test('assert.fail works', async (assert) => {
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
-  assert.contains(result.stderr, 'called with assert.fail')
+  assert.contains(result.stderr, 'Called with assert.fail')
 })
 
 test('assert.true works', async (assert) => {
@@ -66,7 +86,7 @@ test('assert.truthy works', async (assert) => {
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
-  assert.contains(result.stderr, 'not truthy')
+  assert.contains(result.stderr, 'Not truthy')
 })
 
 test('assert.falsy works', async (assert) => {
@@ -77,7 +97,7 @@ test('assert.falsy works', async (assert) => {
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
-  assert.contains(result.stderr, 'not falsy')
+  assert.contains(result.stderr, 'Not falsy')
 })
 
 test('assert.contains works', async (assert) => {
@@ -102,6 +122,7 @@ test('assert.deepEqual works', async (assert) => {
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
+  assert.contains(result.stderr, 'Values should be deepEqual')
 })
 
 test('assert.notDeepEqual works', async (assert) => {
@@ -115,6 +136,7 @@ test('assert.notDeepEqual works', async (assert) => {
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
+  assert.contains(result.stderr, 'Should not be deepEqual')
 })
 
 test('assert.throws works', async (assert) => {
@@ -125,7 +147,7 @@ test('assert.throws works', async (assert) => {
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
-  assert.contains(result.stderr, 'did not throw')
+  assert.contains(result.stderr, 'Did not throw')
 })
 
 test('assert.notThrows works', async (assert) => {
@@ -149,7 +171,7 @@ test('assert.throwsAsync works', async (assert) => {
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
-  assert.contains(result.stderr, 'did not throw error')
+  assert.contains(result.stderr, 'Did not throw error')
 })
 
 test('assert.notThrowsAsync works', async (assert) => {

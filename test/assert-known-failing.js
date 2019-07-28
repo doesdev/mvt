@@ -2,7 +2,29 @@
 
 const test = require('./../index')
 
-test.failing('assert.is works', async (assert) => assert.is(1, 2))
+test.failing('assert.is works', async (assert) => {
+  const a = `
+    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+    Lorem Ipsum has been the industry's standard dummy text ever since the
+    1500s, when an unknown printer took a galley of type and scrambled it to
+    make a type specimen book. It has survived not only five centuries, but
+    also the leap into electronic typesetting, remaining essentially
+    unchanged. It was popularised in the 1960s with the release of Letraset
+    sheets containing Lorem Ipsum passages, and more recently with desktop
+    publishing software like Aldus PageMaker including versions of Lorem Ipsum
+  `
+  const b = `
+    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+    Lorem Ipsum has been the industry's standard dummy text ever since the
+    1500s, when an known printer took a galley of type and scrambled it to
+    make a type specimen book. It has survived not only five centuries, but
+    also the leap into electronic typesetting, remaining essentially
+    unchanged. It was popularised in the 1970s with the release of Letraset
+    sheets containing Lorem Ipsum passages, and more recently with desktop
+    publishing software like Aldus PageMaker including versions of Lorem Ipsum
+  `
+  assert.is(a, b)
+})
 
 test.failing('assert.not works', async (assert) => assert.not(1, 1))
 

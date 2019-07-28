@@ -318,16 +318,33 @@ const wrap = (msg, passFn, err, failing) => {
   try {
     passed = passFn()
   } catch (ex) {
-    err = ex
+    err = err || ex
   }
 
   if (failing && !passed) throw (err instanceof Error ? err : new Error(msg))
 
+  if (!passed) err = typeof err === 'function' ? err() : err
+
   return passed ? assert(msg, failing) : handleErr(msg, err)
 }
 
+const diffErr = (a, b, errName = 'Values should be identical') => {
+  let diff
+  try {
+    deepStrictEqual(a, b)
+  } catch (ex) {
+    try {
+      diff = ex.message.split('\n').slice(1).join('\n')
+    } catch (ex) {}
+  }
+
+  diff = diff || `${toPrint(a)} !== ${toPrint(b)}`
+
+  return new Error(`${errName}:\n${diff.trim()}`)
+}
+
 const is = (msg, f) => (a, b) => {
-  return wrap(msg, () => Object.is(a, b), `${toPrint(a)} !== ${toPrint(b)}`, f)
+  return wrap(msg, () => Object.is(a, b), () => diffErr(a, b), f)
 }
 
 const not = (msg, f) => (a, b) => {
@@ -337,7 +354,7 @@ const not = (msg, f) => (a, b) => {
 const pass = (msg, f) => () => wrap(msg, () => true, null, f)
 
 const fail = (msg, f) => () => {
-  return wrap(msg, () => false, 'called with assert.fail', f)
+  return wrap(msg, () => false, 'Called with assert.fail', f)
 }
 
 const isTrue = (msg, f) => (a) => {
@@ -349,11 +366,11 @@ const isFalse = (msg, f) => (a) => {
 }
 
 const truthy = (msg, f) => (a) => {
-  return wrap(msg, () => !!a, `not truthy: ${toPrint(a)}`, f)
+  return wrap(msg, () => !!a, `Not truthy: ${toPrint(a)}`, f)
 }
 
 const falsy = (msg, f) => (a) => {
-  return wrap(msg, () => !a, `not falsy: ${toPrint(a)}`, f)
+  return wrap(msg, () => !a, `Not falsy: ${toPrint(a)}`, f)
 }
 
 const contains = (msg, f) => (a, b) => {
@@ -366,7 +383,7 @@ const deepEqual = (msg, f) => (a, b) => {
   return wrap(
     msg,
     () => deepStrictEqual(a, b) || true,
-    `not deepEqual:\nA:\n${toPrint(a)}\nB:\n${toPrint(b)}`,
+    () => diffErr(a, b, 'Values should be deepEqual'),
     f
   )
 }
@@ -375,7 +392,7 @@ const notDeepEqual = (msg, f) => (a, b) => {
   return wrap(
     msg,
     () => notDeepStrictEqual(a, b) || true,
-    `is deepEqual:\nA:\n${toPrint(a)}\nB:\n${toPrint(b)}`,
+    `Should not be deepEqual, it is:\n${toPrint(a)}`,
     f
   )
 }
@@ -383,7 +400,7 @@ const notDeepEqual = (msg, f) => (a, b) => {
 const throws = (msg, f) => (a) => {
   let threw
   try { a() } catch (ex) { threw = true }
-  return wrap(msg, () => threw, `did not throw error`, f)
+  return wrap(msg, () => threw, `Did not throw error`, f)
 }
 
 const notThrows = (msg, f) => (a) => {
@@ -395,7 +412,7 @@ const notThrows = (msg, f) => (a) => {
 const throwsAsync = (msg, f) => async (a) => {
   let threw
   try { await a() } catch (ex) { threw = true }
-  return wrap(msg, () => threw, `did not throw error`, f)
+  return wrap(msg, () => threw, `Did not throw error`, f)
 }
 
 const notThrowsAsync = (msg, f) => async (a) => {
