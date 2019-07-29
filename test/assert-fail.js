@@ -152,13 +152,14 @@ test('assert.throws works', async (assert) => {
 
 test('assert.notThrows works', async (assert) => {
   const js = `test('assert.notThrows works', (assert) => {
-    assert.notThrows(() => { throw new Error('it throws') })
+    const throws = require('./../_errors')
+    assert.notThrows(throws)
   })`
 
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
-  assert.contains(result.stderr, 'it throws')
+  assert.contains(result.stderr, 'a.map is not a function')
 })
 
 test('assert.throwsAsync works', async (assert) => {

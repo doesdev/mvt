@@ -23,9 +23,6 @@ of most alerts. This is an effort to minimize recursive devDependencies.
 - It can be called via the `mvt` cli or by simply calling `node [test-file].js`
 
 ## What it lacks (way more than I can list, but here's the most notable)
-- Useful `Error` output
-  - you won't get a clean stack, it will be filled with useless info from `mvt`
-  - that will make it difficult to debug where problems actually occurred
 - Concurrency
   - that's not a thing here
 - Transpilation

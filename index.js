@@ -70,6 +70,11 @@ const handleErr = (msg, err, noExit) => {
   err = err || `Failed: ${msg}`
   err = err instanceof Error ? err : new Error(err)
 
+  if (err.stack) {
+    const noMvt = (l) => l.indexOf('mvt') === -1
+    err.stack = err.stack.split('\n').filter(noMvt).join('\n')
+  }
+
   console.error(err)
 
   if (noExit) throw err
@@ -330,15 +335,31 @@ const wrap = (msg, passFn, err, failing) => {
 
 const diffErr = (a, b, errName = 'Values should be identical') => {
   let diff
+
   try {
-    deepStrictEqual(a, b)
+    const differ = require('diff')
+    const reset = `\u001b[0m`
+    const green = `\u001b[32m`
+    const red = `\u001b[31m`
+    const grey = '\u001b[30;1m'
+
+    diff = ''
+    differ.diffLines(a, b).forEach(({ added, removed, value }) => {
+      const color = added ? green : (removed ? red : grey)
+      const sym = added ? '+' : (removed ? '-' : ' ')
+      diff += `${color}${sym}${value}${reset}\n`
+    })
   } catch (ex) {
     try {
-      diff = ex.message.split('\n').slice(1).join('\n')
-    } catch (ex) {}
-  }
+      deepStrictEqual(a, b)
+    } catch (ex) {
+      try {
+        diff = ex.message.split('\n').slice(1).join('\n')
+      } catch (ex) {}
+    }
 
-  diff = diff || `${toPrint(a)} !== ${toPrint(b)}`
+    diff = diff || `${toPrint(a)} !== ${toPrint(b)}`
+  }
 
   return new Error(`${errName}:\n${diff.trim()}`)
 }
