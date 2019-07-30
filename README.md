@@ -43,7 +43,7 @@ going to occur.
   - [Notes](#notes)
   - [License](#license)
 
-## Install
+# Install
 
 ```sh
 # Install globally
@@ -53,7 +53,7 @@ $ npm install --global mvt
 $ npm install --save-dev mvt
 ```
 
-## Usage
+# Usage
 
 ```sh
 mvt
@@ -102,9 +102,9 @@ test.bench('test.bench works', (assert) => {
 
 ![Output](images/output.png)
 
-## API
+# API
 
-### Test Function
+## Test Function
 The only thing this module exports.
 
 ### `test` ( message, testFunction )   
@@ -113,7 +113,7 @@ receives the `assert` object (see below).
 - `message`: (String) Description of test
 - `testFunction`: ([Async]Function) Description of test
 
-### Setup and Teardown
+## Setup and Teardown
 
 ### `test.setup` ( opts )   
 Use this to configure your tests.   
@@ -126,7 +126,7 @@ Run this before we start running any tests. [callback can be `async`]
 ### `test.after` ( callback )   
 Run this after we run all tests. [callback can be `async`]   
 
-### Test Modifiers
+## Test Modifiers
 
 ### `test.only` ( message, testFunction )   
 Tests will only be run on any tests run with this modifier.   
@@ -137,7 +137,7 @@ Skip that test (logical enough).
 ### `test.failing` ( message, testFunction )   
 This test must fail. If it passes, we'll fail your whole test suite. Goteem.   
 
-### Special Tests
+## Special Tests
 
 ### `test.bench` ( message, testFunction, opts )
 Run the `testFunction` `opts.samples || 10` times. If average run duration is
@@ -146,7 +146,7 @@ more than `opts.max || 100` milliseconds fail the test.
   - `samples` (Number) - How many times we should run the `testFunction`
   - `max` (Number [*in ms*]) - Maximum average duration threshhold
 
-### Assertions
+## Assertions
 Methods available on `assert` object passed to testFunction
 - **`is`** ( a, b ) - `a` and `b` must be identical
 - **`not`** ( a, b ) - `a` and `b` must not be identical
@@ -165,7 +165,7 @@ Methods available on `assert` object passed to testFunction
 - **`notThrowsAsync`** ( a ) - `a` must be an async function, and it must not throw
 
 
-## Notes
+# Notes
 
 - If your test file is called with the `--verbose` flag it will list all passed tests
 
@@ -175,6 +175,6 @@ Methods available on `assert` object passed to testFunction
 dependency, we'll use that for string diffs. To make them more readable and
 what not.
 
-## License
+# License
 
 MIT © [Andrew Carpenter](https://github.com/doesdev)
