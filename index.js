@@ -10,6 +10,7 @@ const colorGreen = `\u001b[32m`
 const colorRed = `\u001b[31m`
 const colorBlue = `\u001b[34m`
 const colorYellow = `\u001b[33m`
+const colorGrey = '\u001b[30;1m'
 const buf = `${Array(charOffset + 1).join(' ')}`
 const queue = []
 
@@ -338,16 +339,12 @@ const diffErr = (a, b, errName = 'Values should be identical') => {
 
   try {
     const differ = require('diff')
-    const reset = `\u001b[0m`
-    const green = `\u001b[32m`
-    const red = `\u001b[31m`
-    const grey = '\u001b[30;1m'
 
     diff = ''
     differ.diffLines(a, b).forEach(({ added, removed, value }) => {
-      const color = added ? green : (removed ? red : grey)
+      const color = added ? colorGreen : (removed ? colorRed : colorGrey)
       const sym = added ? '+' : (removed ? '-' : ' ')
-      diff += `${color}${sym}${value}${reset}\n`
+      diff += `${color}${sym}${(`${value}` || '').trim()}${colorReset}\n`
     })
   } catch (ex) {
     try {
