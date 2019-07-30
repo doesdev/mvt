@@ -1,4 +1,4 @@
-# mvt [![NPM version](https://badge.fury.io/js/mvt.svg)](https://npmjs.org/package/mvt)   [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)  [![Build Status](https://travis-ci.com/doesdev/mvt.svg?branch=4.0.0)](https://travis-ci.com/doesdev/mvt)  
+# mvt [![NPM version](https://badge.fury.io/js/mvt.svg)](https://npmjs.org/package/mvt)   [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)  [![Build Status](https://travis-ci.com/doesdev/mvt.svg)](https://travis-ci.com/doesdev/mvt)  
 
 > Minimum Viable Testing framework
 
