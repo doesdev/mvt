@@ -113,6 +113,7 @@ receives the `assert` object (see below).
 - `message`: (String) Description of test
 - `testFunction`: ([Async]Function) Description of test
 
+#   
 ## Setup and Teardown
 
 ### `test.setup` ( opts )   
@@ -126,6 +127,7 @@ Run this before we start running any tests. [callback can be `async`]
 ### `test.after` ( callback )   
 Run this after we run all tests. [callback can be `async`]   
 
+#   
 ## Test Modifiers
 
 ### `test.only` ( message, testFunction )   
@@ -137,6 +139,7 @@ Skip that test (logical enough).
 ### `test.failing` ( message, testFunction )   
 This test must fail. If it passes, we'll fail your whole test suite. Goteem.   
 
+#   
 ## Special Tests
 
 ### `test.bench` ( message, testFunction, opts )
@@ -146,6 +149,7 @@ more than `opts.max || 100` milliseconds fail the test.
   - `samples` (Number) - How many times we should run the `testFunction`
   - `max` (Number [*in ms*]) - Maximum average duration threshhold
 
+#   
 ## Assertions
 Methods available on `assert` object passed to testFunction
 - **`is`** ( a, b ) - `a` and `b` must be identical
