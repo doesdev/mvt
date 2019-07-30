@@ -1,13 +1,19 @@
 {
   "name": "mvt",
-  "version": "3.0.0",
-  "description": "A minimum viable testing framework, aka a few test helpers, 0 dependencies",
+  "version": "4.0.0",
+  "description": "Minimum Viable Testing framework",
+  "engines" : { "node" : ">=8.0.0" },
   "main": "index.js",
   "files": [
-    "index.js"
+    "cli.js",
+    "index.js",
+    "cli-char-supported.js"
   ],
+  "bin": {
+    "mvt": "cli.js"
+  },
   "scripts": {
-    "test": "node test --verbose"
+    "test": "node cli.js && node cli.js --verbose"
   },
   "repository": {
     "type": "git",
