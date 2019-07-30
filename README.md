@@ -2,6 +2,8 @@
 
 > Minimum Viable Testing framework
 
+# 4.0.0 is moved to [master](https://github.com/doesdev/mvt) and published to NPM. This branch is dead.
+
 ## A Minimalist Take on AVA's Approach to Testing
 Because [AVA](https://github.com/avajs/ava) is awesome. Security alerts on dev
 dependencies are not awesome. Especially when you use the same test library
