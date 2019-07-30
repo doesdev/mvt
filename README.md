@@ -2,7 +2,7 @@
 
 > Minimum Viable Testing framework
 
-## A Minimalist Take on AVA
+## A Minimalist Take on AVA's Approach to Testing
 Because [AVA](https://github.com/avajs/ava) is awesome. Security alerts on dev
 dependencies are not awesome. Especially when you use the same test library
 across dozens of projects. No matter how well maintained a project is, when it
@@ -15,8 +15,7 @@ going to occur.
 - It has 0 dependencies (and devDependencies)
 - It's more emojified than AVA (of course that matters zero)
 - It can be called via the `mvt` cli or by simply calling `node [test-file].js`
-- It doesn't transpile your code (the code you write is the code we test)
-- It also has no dependencies (oh, maybe I already mentioned that)
+- It doesn't transpile your code *(the code you write is the code we test)*
 
 ## What it lacks (the most notable items)
 - Concurrency
@@ -33,9 +32,6 @@ going to occur.
   - Among the most crucial elements
   - And the primary reason you may want to stick to AVA
 
-## This might be for you if
-- You're willing to sacrifice all of the above (and more) to reduce dependencies
-
 ## Table of Contents
   - [Install](#install)
   - [Usage](#usage)
@@ -50,6 +46,10 @@ going to occur.
 ## Install
 
 ```sh
+# Install globally
+$ npm install --global mvt
+
+# Install for project
 $ npm install --save-dev mvt
 ```
 
@@ -107,77 +107,62 @@ test.bench('test.bench works', (assert) => {
 ### Test Function
 The only thing this module exports.
 
-#### `test` ( `String` message, `[Async]Function` testFunction )
+### `test` ( message, testFunction )   
 Main function, give it a message and a test function. Test function
-receives the `assert` object (see below).
+receives the `assert` object (see below).   
+- `message`: (String) Description of test
+- `testFunction`: ([Async]Function) Description of test
 
 ### Setup and Teardown
 
-#### `test.setup` ( `Object` opts )
-Use this to configure your tests. Currently there is only one option.
+### `test.setup` ( opts )   
+Use this to configure your tests.   
+- `opts`: (Object)
+  - `verbose` (Boolean) - Print every test if `true`
 
-###### opts
-  - `verbose` (`Boolean`) - Print every test if `true`
+### `test.before` ( callback )   
+Run this before we start running any tests. [callback can be `async`]   
 
-#### `test.before` ( `[Async]Function` )
-Run this before we start running any tests.
-
-#### `test.after` ( `[Async]Function` )
-Run this after we run all tests.
+### `test.after` ( callback )   
+Run this after we run all tests. [callback can be `async`]   
 
 ### Test Modifiers
 
-#### `test.only` ( `String` message, `[Async]Function` testFunction )
-Tests will only be run on any tests run with this modifier.
+### `test.only` ( message, testFunction )   
+Tests will only be run on any tests run with this modifier.   
 
-#### `test.skip` ( `String` message, `[Async]Function` testFunction )
-Skip that test (logical enough).
+### `test.skip` ( message, testFunction )   
+Skip that test (logical enough).   
 
-#### `test.failing` ( `String` message, `[Async]Function` testFunction )
-This test must fail. If it passes, we'll fail your whole test suite. Goteem.
+### `test.failing` ( message, testFunction )   
+This test must fail. If it passes, we'll fail your whole test suite. Goteem.   
 
 ### Special Tests
 
-#### `test.bench` ( `String` message, `[Async]Function` testFunction, `Object` opts )
+### `test.bench` ( message, testFunction, opts )
 Run the `testFunction` `opts.samples || 10` times. If average run duration is
-more than `opts.max || 100` milliseconds fail the test.
-
-###### opts
-  - `samples` (`Number`) - How many times we should run the `testFunction`
-  - `max` (`Number` in ms) - Maximum average duration threshhold
+more than `opts.max || 100` milliseconds fail the test.   
+- `opts`: (Object)
+  - `samples` (Number) - How many times we should run the `testFunction`
+  - `max` (Number [*in ms*]) - Maximum average duration threshhold
 
 ### Assertions
 Methods available on `assert` object passed to testFunction
-
-##### `is` (a, b) - `a` and `b` must be identical
-
-##### `not` (a, b) - `a` and `b` must not be identical
-
-##### `pass` () - Passes errydamntime
-
-##### `fail` () - Fails errydamntime
-
-##### `true` (a) - `a` must be strictly `true`
-
-##### `false` (a) - `a` must be strictly `false`
-
-##### `truthy` (a) - `a` must be truthy
-
-##### `falsy` (a) - `a` must be falsy
-
-##### `contains` (a, `String` b) - `JSON.stringify(a)` must contain `b`
-
-##### `deepEqual` (a, b) - `a` must be `deepEqual` to `b`
-
-##### `notDeepEqual` (a, b) - `a` must not be `deepEqual` to `b`
-
-##### `throws` (a) - `a` must be a function, and it must throw
-
-##### `notThrows` (a) - `a` must be a function, and it must not throw
-
-##### `throwsAsync` (a) - `a` must be an async function, and it must throw
-
-##### `notThrowsAsync` (a) - `a` must be an async function, and it must not throw
+- **`is`** ( a, b ) - `a` and `b` must be identical
+- **`not`** ( a, b ) - `a` and `b` must not be identical
+- **`pass`** () - Passes errydamntime
+- **`fail`** () - Fails errydamntime
+- **`true`** ( a ) - `a` must be strictly `true`
+- **`false`** ( a ) - `a` must be strictly `false`
+- **`truthy`** ( a ) - `a` must be truthy
+- **`falsy`** ( a ) - `a` must be falsy
+- **`contains`** ( a, b ) - `JSON.stringify(a)` must contain (String)`b`
+- **`deepEqual`** ( a, b ) - `a` must be `deepEqual` to `b`
+- **`notDeepEqual`** ( a, b ) - `a` must not be `deepEqual` to `b`
+- **`throws`** ( a ) - `a` must be a function, and it must throw
+- **`notThrows`** ( a ) - `a` must be a function, and it must not throw
+- **`throwsAsync`** ( a ) - `a` must be an async function, and it must throw
+- **`notThrowsAsync`** ( a ) - `a` must be an async function, and it must not throw
 
 
 ## Notes

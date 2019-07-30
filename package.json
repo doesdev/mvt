@@ -1,7 +1,7 @@
 {
   "name": "mvt",
-  "version": "4.0.0-beta.9",
-  "description": "Minimum Viable Testing framework, it's like AVA, if AVA sucked",
+  "version": "4.0.0",
+  "description": "Minimum Viable Testing framework",
   "engines" : { "node" : ">=8.0.0" },
   "main": "index.js",
   "files": [

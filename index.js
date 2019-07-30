@@ -236,6 +236,8 @@ const test = async (msg, fn) => {
         process.stdout.write(`${colorRed}${result}${colorReset}\n`)
       }
     }
+
+    process.nextTick(() => process.exit(0))
   })
 }
 
