@@ -10,7 +10,11 @@ const flags = {
   '-v': 'verbose',
   '--verbose': 'verbose',
   '-h': 'help',
-  '--help': 'help'
+  '--help': 'help',
+  '-t': 'tap',
+  '--tap': 'tap',
+  '-p': 'persist',
+  '--persist': 'persist'
 }
 const setup = {}
 
@@ -23,7 +27,9 @@ Usage
   mvt [<file|directory> ...]
 
 Options
-  --verbose, -v           Enable verbose output
+  --verbose, -v       Enable verbose output
+  --persist, -p       Don't process.exit on error
+  --tap, -t           Use TAP reporter
 
 Examples
   mvt

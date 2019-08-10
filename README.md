@@ -139,6 +139,9 @@ Skip that test (logical enough).
 ### `test.failing` ( message, testFunction )   
 This test must fail. If it passes, we'll fail your whole test suite. Goteem.   
 
+### `test.todo` ( message )   
+This is just a placeholder for your good intentions.   
+
 #   
 ## Special Tests
 

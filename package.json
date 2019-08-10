@@ -13,7 +13,7 @@
     "mvt": "cli.js"
   },
   "scripts": {
-    "test": "node cli.js && node cli.js --verbose"
+    "test": "node cli && node cli v"
   },
   "repository": {
     "type": "git",

@@ -14,7 +14,9 @@ const colorGrey = '\u001b[30;1m'
 const buf = `${Array(charOffset + 1).join(' ')}`
 const queue = []
 
-let verbose = process.argv.some((a) => a === '--verbose' || a === '-v')
+let tap = process.argv.some((a) => a === '--tap' || a === '-t')
+let persist = process.argv.some((a) => a === '--persist' || a === '-p')
+let verbose = process.argv.some((a) => !tap && (a === '--verbose' || a === '-v'))
 let fileName, lastFileName
 let fileTestCount = 0
 
@@ -49,7 +51,9 @@ const fmtMs = (ms) => {
 }
 
 const _setup = async (opts = {}) => {
-  verbose = opts.verbose !== undefined ? !!opts.verbose : verbose
+  tap = opts.tap !== undefined ? !!opts.tap : tap
+  persist = tap || (opts.persist !== undefined ? !!opts.persist : persist)
+  verbose = !tap && (opts.verbose !== undefined ? !!opts.verbose : verbose)
   fileName = opts.fileName
 
   if (charsChecked) return
