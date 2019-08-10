@@ -7,13 +7,13 @@
   "files": [
     "cli.js",
     "index.js",
-    "cli-char-supported.js"
+    "lib/"
   ],
   "bin": {
     "mvt": "cli.js"
   },
   "scripts": {
-    "test": "node cli && node cli v"
+    "test": "node cli && node cli -v"
   },
   "repository": {
     "type": "git",
