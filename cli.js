@@ -83,7 +83,7 @@ const main = async () => {
     test = require('./index')
   }
 
-  let seen = {}
+  const seen = {}
   files.forEach((f) => {
     if (seen[f]) return
     seen[f] = true

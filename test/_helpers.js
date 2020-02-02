@@ -3,7 +3,7 @@
 const fs = require('fs')
 const path = require('path')
 const { fork } = require('child_process')
-const base = `'use strict'\nconst test = require('./../../index')\n\n`
+const base = '\'use strict\'\nconst test = require(\'./../../index\')\n\n'
 
 let id = 0
 
