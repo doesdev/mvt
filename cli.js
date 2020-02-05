@@ -94,6 +94,7 @@ const main = async () => {
     } catch (ex) {
       console.error(`Unable to require test file ${f}:`)
       console.error(ex)
+      process.exit(1)
     }
   })
 }

@@ -3,15 +3,12 @@
 const fs = require('fs')
 const path = require('path')
 const { fork } = require('child_process')
-const base = '\'use strict\'\nconst test = require(\'./../../index\')\n\n'
-const tmpDir = path.resolve(__dirname, '..', '_temp')
+const requireStmt = '\'use strict\'\nconst test = require(\'./../../index\')\n\n'
+const tmpDir = path.resolve(__dirname, '..', 'temp')
 
 let id = 0
 
-module.exports.writeRunDeleteTest = async (body, verbose) => {
-  const file = path.join(tmpDir, `_temp_${Date.now()}_${++id}.js`)
-  fs.writeFileSync(file, `${base}\n${body}`, 'utf8')
-  const args = verbose ? ['--verbose'] : []
+const friendlyFork = async (file, args) => {
   const forked = fork(file, args, { silent: true })
 
   let code = 0
@@ -36,7 +33,24 @@ module.exports.writeRunDeleteTest = async (body, verbose) => {
     forked.stderr.on('data', (d) => { stderr += d.toString('utf8') })
   })
 
+  return { code, stdout, stderr, error }
+}
+
+const writeTempFile = (body, base) => {
+  const file = path.join(tmpDir, `temp_${Date.now()}_${++id}.js`)
+  fs.writeFileSync(file, `${base ? `${base}\n` : ''}${body}`, 'utf8')
+  return file
+}
+
+const writeRunDeleteTest = async (body, verbose) => {
+  const file = writeTempFile(body, requireStmt)
+  const args = verbose ? ['--verbose'] : []
+
+  const { code, stdout, stderr, error } = await friendlyFork(file, args)
+
   fs.unlinkSync(file)
 
   return { code, stdout, stderr, error }
 }
+
+module.exports = { writeRunDeleteTest, friendlyFork, writeTempFile }

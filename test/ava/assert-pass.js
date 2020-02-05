@@ -14,6 +14,7 @@ test('assert.is works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -28,6 +29,7 @@ test('assert.not works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -38,6 +40,7 @@ test('assert.pass works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -48,6 +51,7 @@ test('assert.true works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -58,6 +62,7 @@ test('assert.false works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -72,6 +77,7 @@ test('assert.truthy works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -89,6 +95,7 @@ test('assert.falsy works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -105,6 +112,7 @@ test('assert.contains works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -122,6 +130,7 @@ test('assert.deepEqual works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -139,6 +148,7 @@ test('assert.notDeepEqual works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -151,6 +161,7 @@ test('assert.throws works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -163,6 +174,7 @@ test('assert.notThrows works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -177,6 +189,7 @@ test('assert.throwsAsync works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
 
@@ -191,5 +204,6 @@ test('assert.notThrowsAsync works', async (assert) => {
 
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })

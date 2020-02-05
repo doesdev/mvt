@@ -8,6 +8,7 @@ const avaDir = path.join(__dirname, '..', 'ava')
 const expectPass = `
   const result = await runner(js)
   assert.is(result.code, 0)
+  assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 `
 
