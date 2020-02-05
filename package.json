@@ -2,7 +2,9 @@
   "name": "mvt",
   "version": "4.0.0",
   "description": "Minimum Viable Testing framework",
-  "engines" : { "node" : ">=8.0.0" },
+  "engines": {
+    "node": ">=8.0.0"
+  },
   "main": "index.js",
   "files": [
     "cli.js",
@@ -13,7 +15,10 @@
     "mvt": "cli.js"
   },
   "scripts": {
-    "test": "node cli && node cli -v"
+    "test-compile": "node test/_helpers/mvt-to-ava.js",
+    "test-ava": "ava test/ava/**.js",
+    "test-mvt": "node cli test/mvt",
+    "test": "npm run test-compile && npm run test-ava && npm run test-mvt"
   },
   "repository": {
     "type": "git",
@@ -33,5 +38,7 @@
   },
   "homepage": "https://github.com/doesdev/mvt#readme",
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "ava": "^3.2.0"
+  }
 }

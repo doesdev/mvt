@@ -12,7 +12,7 @@ going to occur.
 [But It's Just a Dev Dependency...](https://medium.com/swlh/but-its-just-a-dev-dependency-566646ebeec9)
 
 ## What's good about it
-- It has 0 dependencies (and devDependencies)
+- It has 0 dependencies (1 dev dep, and that's ava :smirk:)
 - It's more emojified than AVA (of course that matters zero)
 - It can be called via the `mvt` cli or by simply calling `node [test-file].js`
 - It doesn't transpile your code *(the code you write is the code we test)*

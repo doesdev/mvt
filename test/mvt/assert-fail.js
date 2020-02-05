@@ -1,7 +1,9 @@
 'use strict'
 
-const test = require('./../index')
-const { writeRunDeleteTest: runner } = require('./_helpers')
+// no-ava-compile
+
+const test = require('./../../index')
+const { writeRunDeleteTest: runner } = require('./../_helpers/helpers')
 
 test('assert.is works', async (assert) => {
   const js = `test('assert.is works', async (assert) => {
@@ -152,7 +154,7 @@ test('assert.throws works', async (assert) => {
 
 test('assert.notThrows works', async (assert) => {
   const js = `test('assert.notThrows works', (assert) => {
-    const throws = require('./../_errors')
+    const throws = require('./../_helpers/errors')
     assert.notThrows(throws)
   })`
 

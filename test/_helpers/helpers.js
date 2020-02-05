@@ -4,11 +4,12 @@ const fs = require('fs')
 const path = require('path')
 const { fork } = require('child_process')
 const base = '\'use strict\'\nconst test = require(\'./../../index\')\n\n'
+const tmpDir = path.resolve(__dirname, '..', '_temp')
 
 let id = 0
 
 module.exports.writeRunDeleteTest = async (body, verbose) => {
-  const file = path.resolve(__dirname, 'temp', `_temp_${Date.now()}_${++id}.js`)
+  const file = path.join(tmpDir, `_temp_${Date.now()}_${++id}.js`)
   fs.writeFileSync(file, `${base}\n${body}`, 'utf8')
   const args = verbose ? ['--verbose'] : []
   const forked = fork(file, args, { silent: true })

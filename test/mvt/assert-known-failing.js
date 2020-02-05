@@ -1,6 +1,6 @@
 'use strict'
 
-const test = require('./../index')
+const test = require('./../../index')
 
 test.failing('assert.is works', async (assert) => {
   const a = `
