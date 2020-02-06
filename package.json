@@ -16,7 +16,7 @@
   },
   "scripts": {
     "test-compile": "node test/_helpers/mvt-to-ava.js",
-    "test-ava": "ava test/ava/**.js",
+    "test-ava": "ava -s test/ava/**.js",
     "test-mvt": "node cli test/mvt",
     "test": "npm run test-compile && npm run test-ava && npm run test-mvt"
   },

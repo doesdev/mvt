@@ -1,6 +1,7 @@
 'use strict'
 
 const fs = require('fs')
+const fsp = fs.promises
 const path = require('path')
 const { fork } = require('child_process')
 const requireStmt = '\'use strict\'\nconst test = require(\'./../../index\')\n\n'
@@ -48,7 +49,7 @@ const writeRunDeleteTest = async (body, verbose) => {
 
   const { code, stdout, stderr, error } = await friendlyFork(file, args)
 
-  fs.unlinkSync(file)
+  await fsp.unlink(file)
 
   return { code, stdout, stderr, error }
 }
