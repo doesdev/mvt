@@ -151,6 +151,8 @@ more than `opts.max || 100` milliseconds fail the test.
 - `opts`: (Object)
   - `samples` (Number) - How many times we should run the `testFunction`
   - `max` (Number [*in ms*]) - Maximum average duration threshhold
+  - `parallel` (Boolean) - If `Async Func` run in parallel, default is `false`
+  - `cb` (Function) - Called with `{ msTotal, msAvg }` on bench completion
 
 #   
 ## Assertions
