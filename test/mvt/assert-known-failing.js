@@ -75,3 +75,11 @@ test.failing('assert.notThrowsAsync works', async (assert) => {
     process.nextTick(() => reject(new Error('rejected Promise')))
   }))
 })
+
+test.failing('assert.lessThan works', async (assert) => {
+  assert.lessThan(2, 1)
+})
+
+test.failing('assert.greaterThan works', async (assert) => {
+  assert.greaterThan(1, 2)
+})

@@ -202,3 +202,29 @@ test('assert.notThrowsAsync works', async (assert) => {
   assert.falsy(result.stderr)
   assert.regex(result.stdout, /1 tests passed/)
 })
+
+test('assert.lessThan works', async (assert) => {
+  const js = `
+    test.failing('assert.lessThan works', async (assert) => {
+      assert.lessThan(2, 1)
+    })
+  `
+
+  const result = await runner(js)
+  assert.is(result.code, 0)
+  assert.falsy(result.stderr)
+  assert.regex(result.stdout, /1 tests passed/)
+})
+
+test('assert.greaterThan works', async (assert) => {
+  const js = `
+    test.failing('assert.greaterThan works', async (assert) => {
+      assert.greaterThan(1, 2)
+    })
+  `
+
+  const result = await runner(js)
+  assert.is(result.code, 0)
+  assert.falsy(result.stderr)
+  assert.regex(result.stdout, /1 tests passed/)
+})

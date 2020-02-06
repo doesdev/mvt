@@ -189,3 +189,25 @@ test('assert.notThrowsAsync works', async (assert) => {
   assert.truthy(result.stderr)
   assert.contains(result.stderr, 'rejected Promise')
 })
+
+test('assert.lessThan works', async (assert) => {
+  const js = `test('assert.lessThan works', async (assert) => {
+    assert.lessThan(2, 1)
+  })`
+
+  const result = await runner(js)
+  assert.is(result.code, 1)
+  assert.truthy(result.stderr)
+  assert.contains(result.stderr, '2 is not less than 1')
+})
+
+test('assert.greaterThan works', async (assert) => {
+  const js = `test('assert.greaterThan works', async (assert) => {
+    assert.greaterThan(1, 2)
+  })`
+
+  const result = await runner(js)
+  assert.is(result.code, 1)
+  assert.truthy(result.stderr)
+  assert.contains(result.stderr, '1 is not greater than 2')
+})

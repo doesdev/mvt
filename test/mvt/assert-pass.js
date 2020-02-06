@@ -80,3 +80,15 @@ test('assert.notThrowsAsync works', async (assert) => {
     process.nextTick(() => resolve('all good'))
   }))
 })
+
+test('assert.lessThan works', async (assert) => {
+  assert.lessThan(1, 2)
+  assert.lessThan(99, 1e2)
+  assert.lessThan('A', 'B')
+})
+
+test('assert.greaterThan works', async (assert) => {
+  assert.greaterThan(2, 1)
+  assert.greaterThan(1e2, 99)
+  assert.greaterThan('B', 'A')
+})
