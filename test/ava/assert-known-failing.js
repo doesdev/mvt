@@ -115,6 +115,19 @@ test('assert.contains works', async (assert) => {
   assert.regex(result.stdout, /1 tests passed/)
 })
 
+test('assert.doesNotContain works', async (assert) => {
+  const js = `
+    test.failing('assert.doesNotContain works', async (assert) => {
+      assert.doesNotContain('bannannaanna', 'anna')
+    })
+  `
+
+  const result = await runner(js)
+  assert.is(result.code, 0)
+  assert.falsy(result.stderr)
+  assert.regex(result.stdout, /1 tests passed/)
+})
+
 test('assert.deepEqual works', async (assert) => {
   const js = `
     test.failing('assert.deepEqual works', async (assert) => {

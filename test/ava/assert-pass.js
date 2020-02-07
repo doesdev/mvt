@@ -116,6 +116,23 @@ test('assert.contains works', async (assert) => {
   assert.regex(result.stdout, /1 tests passed/)
 })
 
+test('assert.doesNotContain works', async (assert) => {
+  const js = `
+    test('assert.doesNotContain works', async (assert) => {
+      assert.doesNotContain(0, '1')
+      assert.doesNotContain(false, 'true')
+      assert.doesNotContain('some words here', 'but not here')
+      assert.doesNotContain([1, 2, 'something goes here', 4], 'nopes')
+      assert.doesNotContain({ a: 'some text here' }, 'this is not in there')
+    })
+  `
+
+  const result = await runner(js)
+  assert.is(result.code, 0)
+  assert.falsy(result.stderr)
+  assert.regex(result.stdout, /1 tests passed/)
+})
+
 test('assert.deepEqual works', async (assert) => {
   const js = `
     test('assert.deepEqual works', async (assert) => {

@@ -43,6 +43,14 @@ test('assert.contains works', async (assert) => {
   assert.contains({ a: 'some text here' }, 'text')
 })
 
+test('assert.doesNotContain works', async (assert) => {
+  assert.doesNotContain(0, '1')
+  assert.doesNotContain(false, 'true')
+  assert.doesNotContain('some words here', 'but not here')
+  assert.doesNotContain([1, 2, 'something goes here', 4], 'nopes')
+  assert.doesNotContain({ a: 'some text here' }, 'this is not in there')
+})
+
 test('assert.deepEqual works', async (assert) => {
   assert.deepEqual(1, 1)
   assert.deepEqual([1, 2, 3], [1, 2, 3])

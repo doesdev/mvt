@@ -4,6 +4,7 @@ const fs = require('fs')
 const path = require('path')
 const mvtDir = path.join(__dirname, '..', 'mvt')
 const avaDir = path.join(__dirname, '..', 'ava')
+const ignoreRgx = /\/\*( )?start-ava-ignore( )?\*\/[\s\S]*?\/\*( )?end-ava-ignore( )?\*\//g
 
 const expectPass = `
   const result = await runner(js)
@@ -22,6 +23,7 @@ const getUpdatedCode = (filepath) => {
   const mvt = 'const test = require(\'./../../index\')'
   const ava = `const test = require('ava')\n${runner}`
 
+  code = code.replace(ignoreRgx, '')
   code = code.replace(runner, '').replace(mvt, ava)
 
   const splitOnTest = code.split(/(?=(?<!['`])test\()|(?=(?<!['`])test\.\w+\()/)

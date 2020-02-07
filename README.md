@@ -166,6 +166,7 @@ Methods available on `assert` object passed to testFunction
 - **`truthy`** ( a ) - `a` must be truthy
 - **`falsy`** ( a ) - `a` must be falsy
 - **`contains`** ( a, b ) - `JSON.stringify(a)` must contain (String)`b`
+- **`doesNotContain`** ( a, b ) - `JSON.stringify(a)` must not contain (String)`b`
 - **`lessThan`** ( a, b ) - `a` must be less than `b`
 - **`greaterThan`** ( a, b ) - `a` must be greater than `b`
 - **`deepEqual`** ( a, b ) - `a` must be `deepEqual` to `b`

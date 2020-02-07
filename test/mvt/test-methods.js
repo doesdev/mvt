@@ -88,3 +88,20 @@ test('test.only works', async (assert) => {
   assert.falsy(result.stderr)
   assert.contains(result.stdout, 'run with test.only')
 })
+
+test.skip('test.bench.only works', async (assert) => {
+  const js = `
+  test('test is not run', () => console.log('it was run'))
+
+  test.bench.only('test.bench.only works', async (assert) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve(), 50)
+    })
+  }, { samples: 2, max: 100 })`
+
+  const result = await runner(js)
+  assert.is(result.code, 0)
+  assert.falsy(result.stderr)
+  assert.contains(result.stdout, 'run with test.only')
+  assert.doesNotContain(result.stdout, 'it was run')
+})
