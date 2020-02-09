@@ -89,7 +89,8 @@ test('test.only works', async (assert) => {
   assert.contains(result.stdout, 'run with test.only')
 })
 
-test.skip('test.bench.only works', async (assert) => {
+/* start-ava-ignore */
+test('test.bench.only works', async (assert) => {
   const js = `
   test('test is not run', () => console.log('it was run'))
 
@@ -105,3 +106,4 @@ test.skip('test.bench.only works', async (assert) => {
   assert.contains(result.stdout, 'run with test.only')
   assert.doesNotContain(result.stdout, 'it was run')
 })
+/* end-ava-ignore */
