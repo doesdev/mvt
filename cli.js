@@ -28,8 +28,6 @@ Usage
 
 Options
   --verbose, -v       Enable verbose output
-  --persist, -p       Don't process.exit on error
-  --tap, -t           Use TAP reporter
 
 Examples
   mvt
