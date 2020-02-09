@@ -64,7 +64,7 @@ test('test.bench (failing) works', async (assert) => {
 test('test.bench (failing) works in parallel', async (assert) => {
   const js = `test.bench(
     'test.bench (failing) works in parallel',
-    { samples: 5, max: 35, parallel: true },
+    { samples: 5, max: 195, parallel: true },
     (assert) => {
       return new Promise((resolve, reject) => {
         setTimeout(() => resolve(), 200)
