@@ -1,6 +1,6 @@
 {
   "name": "mvt",
-  "version": "4.0.0",
+  "version": "4.1.0-beta",
   "description": "Minimum Viable Testing framework",
   "engines": {
     "node": ">=8.0.0"

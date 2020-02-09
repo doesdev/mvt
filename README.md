@@ -13,7 +13,6 @@ going to occur.
 
 ## What's good about it
 - It has 0 dependencies (1 dev dep, and that's ava :smirk:)
-- It's more emojified than AVA (of course that matters zero)
 - It can be called via the `mvt` cli or by simply calling `node [test-file].js`
 - It doesn't transpile your code *(the code you write is the code we test)*
 
@@ -25,11 +24,9 @@ going to occur.
   - Actually, maybe I should add this to "What's good..."
   - I added it...
 - TAP Reporter
-  - I honestly don't even know what that is
-  - I'll look it up and implement it at some point
-  - It's right there on AVA's list of cool isht, so it must be cool
+  - Happy to add it if there is any demand
 - A community and product maturity
-  - Among the most crucial elements
+  - The most crucial elements
   - And the primary reason you may want to stick to AVA
 
 ## Table of Contents
