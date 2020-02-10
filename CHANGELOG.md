@@ -14,6 +14,7 @@ be called on failing tests (#4). Various enhancements.
 ### Fixes
 - Bugfix #2: CLI failed with exit code 0 on require failure (aka tests passed)
 - Bugfix #5: `test.after` never called on failing tests
+- Bugfix: Fix potential hang in cli-char-supported
 
 ### Changed
 - Refactored code base into components
