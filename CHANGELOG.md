@@ -4,8 +4,8 @@ All notable changes to this project will be documented in this file.
 The format is (loosely) based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.1.0-beta](https://github.com/doesdev/mvt/compare/4.0.0...4.1.0-beta)
-#### 2020-03-09
+## [4.1.0](https://github.com/doesdev/mvt/compare/4.0.0...4.1.0)
+#### 2020-03-10
 
 ### Summary
 Refactored into components. Fixed CLI bug (#2), fixed bug causing `after` not to
@@ -14,7 +14,7 @@ be called on failing tests (#4). Various enhancements.
 ### Fixes
 - Bugfix #2: CLI failed with exit code 0 on require failure (aka tests passed)
 - Bugfix #5: `test.after` never called on failing tests
-- Bugfix: Fix potential hang in cli-char-supported
+- Bugfix: Fix potential hang in cli-char-supported check
 
 ### Changed
 - Refactored code base into components
