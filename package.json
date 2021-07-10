@@ -1,6 +1,6 @@
 {
   "name": "mvt",
-  "version": "4.1.1",
+  "version": "4.2.0",
   "description": "Minimum Viable Testing framework",
   "engines": {
     "node": ">=8.0.0"
@@ -39,6 +39,6 @@
   "homepage": "https://github.com/doesdev/mvt#readme",
   "dependencies": {},
   "devDependencies": {
-    "ava": "^3.10.1"
+    "ava": "^3.15.0"
   }
 }
