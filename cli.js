@@ -3,6 +3,7 @@
 
 const fs = require('fs')
 const path = require('path')
+const { pathToFileURL } = require('url')
 const cwd = process.cwd()
 const exts = ['.js', '.mjs']
 const args = process.argv.slice(2)
@@ -86,13 +87,24 @@ const main = async () => {
     if (seen[f]) return
     seen[f] = true
 
-    try {
-      test.setup(Object.assign({}, setup, { fileName: path.basename(f) }))
-      require(f)
-    } catch (ex) {
+    const logFailedImport = (ex) => {
       console.error(`Unable to require test file ${f}:`)
       console.error(ex)
       process.exit(1)
+    }
+
+    try {
+      test.setup(Object.assign({}, setup, { fileName: path.basename(f) }))
+
+      try {
+        require(f)
+      } catch (ex) {
+        /* eslint-disable no-unused-expressions */
+        import(pathToFileURL(f))
+        /* eslint-enable no-unused-expressions */
+      }
+    } catch (ex) {
+      logFailedImport(ex)
     }
   })
 }
