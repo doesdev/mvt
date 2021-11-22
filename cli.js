@@ -99,9 +99,13 @@ const main = async () => {
       try {
         require(f)
       } catch (ex) {
-        /* eslint-disable no-unused-expressions */
-        import(pathToFileURL(f))
-        /* eslint-enable no-unused-expressions */
+        try {
+          /* eslint-disable no-unused-expressions */
+          import(pathToFileURL(f))
+          /* eslint-enable no-unused-expressions */
+        } catch (ex) {
+          logFailedImport(ex)
+        }
       }
     } catch (ex) {
       logFailedImport(ex)
