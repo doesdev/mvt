@@ -1,7 +1,7 @@
 'use strict'
 
-const test = require('ava')
-const { writeRunDeleteTest: runner } = require('./../_helpers/helpers')
+import test from 'ava'
+import { writeRunDeleteTest as runner } from './../_helpers/helpers.js'
 
 test('test.bench works', async (assert) => {
   const js = `

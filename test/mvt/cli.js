@@ -1,11 +1,14 @@
 'use strict'
 
-const test = require('./../../index')
+import test from './../../index.js'
 
 test('cli exits ungracefully on require error', async (assert) => {
-  const fs = require('fs')
-  const path = require('path')
-  const { friendlyFork, writeTempFile } = require('./../_helpers/helpers')
+  const fs = await import('fs')
+  const path = await import('path')
+  const { fileURLToPath } = await import('url')
+  const { friendlyFork, writeTempFile } = await import('./../_helpers/helpers.js')
+
+  const __dirname = path.dirname(fileURLToPath(import.meta.url))
   const cliPath = path.resolve(__dirname, '..', '..', 'cli.js')
   const file = writeTempFile('this is not valid javascript')
   const { code, stderr, stdout } = await friendlyFork(cliPath, [file])

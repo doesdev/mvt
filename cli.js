@@ -1,12 +1,12 @@
 #! /usr/bin/env node
-'use strict'
+import fs from 'fs'
+import path from 'path'
+import { pathToFileURL } from 'url'
 
-const fs = require('fs')
-const path = require('path')
-const { pathToFileURL } = require('url')
 const cwd = process.cwd()
 const exts = ['.js', '.mjs']
 const args = process.argv.slice(2)
+const setup = {}
 const flags = {
   '-v': 'verbose',
   '--verbose': 'verbose',
@@ -17,7 +17,6 @@ const flags = {
   '-p': 'persist',
   '--persist': 'persist'
 }
-const setup = {}
 
 const deflagged = args.filter((a) => !(flags[a] && (setup[flags[a]] = true)))
 
@@ -77,13 +76,14 @@ const main = async () => {
 
   let test
   try {
-    test = require(path.resolve(cwd, 'node_modules', 'mvt'))
+    test = (await import(path.resolve(cwd, 'node_modules', 'mvt'))).default
   } catch (ex) {
-    test = require('./index')
+    test = (await import('./index.js')).default
   }
 
   const seen = {}
-  files.forEach((f) => {
+
+  for (const f of files) {
     if (seen[f]) return
     seen[f] = true
 
@@ -96,21 +96,11 @@ const main = async () => {
     try {
       test.setup(Object.assign({}, setup, { fileName: path.basename(f) }))
 
-      try {
-        require(f)
-      } catch (ex) {
-        try {
-          /* eslint-disable no-unused-expressions */
-          import(pathToFileURL(f))
-          /* eslint-enable no-unused-expressions */
-        } catch (ex) {
-          logFailedImport(ex)
-        }
-      }
+      await import(pathToFileURL(f))
     } catch (ex) {
       logFailedImport(ex)
     }
-  })
+  }
 }
 
 main().catch(console.error)

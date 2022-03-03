@@ -1,7 +1,10 @@
 'use strict'
 
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const mvtDir = path.join(__dirname, '..', 'mvt')
 const avaDir = path.join(__dirname, '..', 'ava')
 const ignoreRgx = /\/\*( )?start-ava-ignore( )?\*\/[\s\S]*?\/\*( )?end-ava-ignore( )?\*\//g
@@ -19,9 +22,9 @@ const getUpdatedCode = (filepath) => {
 
   let tests = 0
 
-  const runner = 'const { writeRunDeleteTest: runner } = require(\'./../_helpers/helpers\')'
-  const mvt = 'const test = require(\'./../../index\')'
-  const ava = `const test = require('ava')\n${runner}`
+  const runner = 'import { writeRunDeleteTest as runner } from \'./../_helpers/helpers.js\''
+  const mvt = 'import test from \'./../../index.js\''
+  const ava = `import test from 'ava'\n${runner}`
 
   code = code.replace(ignoreRgx, '')
   code = code.replace(runner, '').replace(mvt, ava)

@@ -1,6 +1,6 @@
 'use strict'
 
-const test = require('./../../index')
+import test from './../../index.js'
 
 test('assert.is works', async (assert) => {
   assert.is(1, 1)

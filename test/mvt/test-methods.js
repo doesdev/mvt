@@ -1,7 +1,7 @@
 'use strict'
 
-const test = require('./../../index')
-const { writeRunDeleteTest: runner } = require('./../_helpers/helpers')
+import test from './../../index.js'
+import { writeRunDeleteTest as runner } from './../_helpers/helpers.js'
 
 test.before(() => console.log('BEFORE: test.before invoked'))
 

@@ -2,8 +2,8 @@
 
 // no-ava-compile
 
-const test = require('./../../index')
-const { writeRunDeleteTest: runner } = require('./../_helpers/helpers')
+import test from './../../index.js'
+import { writeRunDeleteTest as runner } from './../_helpers/helpers.js'
 
 test('test.after is called even when tests fail', async (assert) => {
   const js = `
@@ -180,14 +180,14 @@ test('assert.throws works', async (assert) => {
 
 test('assert.notThrows works', async (assert) => {
   const js = `test('assert.notThrows works', (assert) => {
-    const throws = require('./../_helpers/errors')
+    const throws = () => { throw new Error('Throwing up') }
     assert.notThrows(throws)
   })`
 
   const result = await runner(js)
   assert.is(result.code, 1)
   assert.truthy(result.stderr)
-  assert.contains(result.stderr, 'a.map is not a function')
+  assert.contains(result.stderr, 'Throwing up')
 })
 
 test('assert.throwsAsync works', async (assert) => {

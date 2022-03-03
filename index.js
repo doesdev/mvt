@@ -1,9 +1,7 @@
-'use strict'
-
+import { test } from './lib/tests.js'
+import { _setup } from './lib/state.js'
 process.env.NODE_ENV = process.env.NODE_ENV || 'test'
-const { test } = require('./lib/tests')
-const { _setup } = require('./lib/state')
 
 test.before(_setup)
 
-module.exports = test
+export default test

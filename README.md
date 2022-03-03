@@ -2,6 +2,11 @@
 
 > Minimum Viable Testing framework
 
+## 5.0.0
+Version 5.0.0+ deprecates support for CommonJS, opting to only support ES Modules. 
+
+Please use `mvt@4` for CommonJS usage.
+
 ## A Minimalist Take on AVA's Approach to Testing
 Because [AVA](https://github.com/avajs/ava) is awesome. Security alerts on dev
 dependencies are not awesome. Especially when you use the same test library
@@ -68,7 +73,7 @@ node test.js --verbose
 ```
 
 ```js
-const test = require('mvt')
+import test from 'mvt'
 
 test.setup({ verbose: true })
 
